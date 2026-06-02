@@ -1,0 +1,247 @@
+---
+import { Instagram, Facebook } from "lucide-astro";
+import Heading from "./Heading.astro";
+import Text from "./Text.astro";
+import Button from "./Button.astro";
+---
+
+<footer class="lg:mt-section-desktop mt-section-mobile">
+  <!-- INSTAGRAM GRID -->
+  <section class="w-full">
+    <div class="grid grid-cols-3 lg:grid-cols-6">
+      {[1, 2, 3, 4, 5, 6].map((number) => (
+        <a
+          href="https://www.instagram.com/boombutik"
+          target="_blank"
+          class={`group relative overflow-hidden block ${
+number <= 3 ? "hidden lg:block" : ""          }`}
+        >
+
+          <img
+            src={`/ig${number}.webp`}
+            alt="Instagram post"
+            class="w-full h-55 lg:h-80 object-cover"
+          />
+
+          <!-- HOVER OVERLAY MED INSTAGRAM-IKON -->
+          <div class="absolute inset-0 bg-neutral-900/50 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex items-center justify-center">
+            <img
+              src="/igicon.svg"
+              alt="instagram logo"
+              class="lg:w-10 w-7 lg:h-10 h-7"
+            />
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- INSTAGRAM HANDLE -->
+    <a
+     href="https://www.instagram.com/boombutik"
+  target="_blank"
+  aria-label="Følg os på Instagram @boombutik"
+  class="absolute right-4 -mt-12 z-10 flex items-center min-h-10 min-w-10"
+>
+  <div class="flex lg:gap-0 gap-2 items-center">
+    <Text color="secondary">boombutik</Text>
+    <img
+      src="/igicon.svg"
+      alt=""
+      class="lg:w-10 w-5 h-5"
+    />
+  </div>
+</a>
+  </section>
+
+  <!-- NYHEDSBREV SEKTION MED ALPINE.JS -->
+  <section
+    class="bg-body-primary"
+    x-data="{ email: '', focused: false, showToast: false }"
+  >
+    <form
+      class="w-full flex items-stretch"
+      x-on:submit.prevent="if (!email) return; showToast = true; email = ''; focused = false; setTimeout(() => showToast = false, 3000)"
+    >
+      <!-- INPUT OMRÅDE -->
+<div class="flex-1 flex items-stretch px-margin-mobile lg:px-margin-desktop py-4 md:py-0">
+  <div class="w-full relative flex items-center">
+    <!-- EMAIL INPUT TIL NYHEDSBREV -->
+    <input
+      id="newsletter-email"
+      type="email"
+      name="email"
+      required
+      x-model="email"
+      x-on:focus="focused = true"
+      x-on:blur="focused = false"
+      x-bind:placeholder="focused ? 'kontakt@boombutik.dk' : ''"
+      class="w-full bg-transparent border-0 outline-none text-xs md:text-base text-text-primary py-3 md:py-4 pl-0 peer focus:outline-none focus:ring-0 placeholder:text-grey-400"
+    />
+
+    <!-- LABEL KOBLET TIL INPUT FOR BEDRE TILGÆNGELIGHED -->
+    <label
+      for="newsletter-email"
+      x-show="!focused && !email"
+      class="absolute left-0 top-1/2 -translate-y-1/2 text-grey-800 pointer-events-none transition-opacity duration-200 text-large md:text-2xl font-semibold tracking-wide"
+    >
+      BOOM BUTIKS NYHEDSBREV
+    </label>
+  </div>
+</div>
+
+      <!-- TILMELDINGSKNAP -->
+      <button
+        type="submit"
+        class="flex items-center justify-center bg-button-secondary-default hover:bg-button-secondary-hover active:bg-button-secondary-active text-text-button-primary hover:text-text-button-secondary px-5 py-3 md:px-16 md:py-5 text-xs md:text-base font-medium tracking-wide hover:opacity-80 transition-opacity w-40 md:w-96 cursor-pointer"
+      >
+        TILMELD NU
+      </button>
+    </form>
+
+    <!-- POPUP BESKED EFTER TILMELDING -->
+    <div
+      x-show="showToast"
+      x-transition
+      class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-black text-text-secondary px-6 py-3 text-sm"
+    >
+      Tak for din tilmelding ✨
+    </div>
+  </section>
+
+  <!-- FOOTER INDHOLD -->
+  <section class="bg-grey-100 w-full lg:py-section-desktop py-section-mobile px-margin-mobile lg:px-margin-desktop">
+    <!-- MEDIELOGOER -->
+    <div class="mb-10 md:mb-16">
+      <!-- <Heading htmlheading="h4" size="xsmall" weight="semibold" color="primary">
+        OMTALT I FLOTTE MEDIER
+      </Heading> -->
+
+      <div class="grid grid-cols-1 gap-6  md:grid md:grid-cols-4 md:gap-8 pb-main-top-desktop">
+        <img
+          src="/footer1.png"
+          alt="Politiken"
+          class="h-6 md:h-9 w-auto object-contain justify-self-start"
+        />
+
+        <img
+          src="/footer2.png"
+          alt="Forbes"
+          class="h-6 md:h-9 w-auto object-contain justify-self-start md:justify-self-center"
+        />
+
+        <img
+          src="/footer3.png"
+          alt="Euroman"
+          class="h-6 md:h-9 w-auto object-contain justify-self-start md:justify-self-center"
+        />
+
+        <img
+          src="/footer4.png"
+          alt="Berlingske"
+          class="h-6 md:h-9 w-auto object-contain justify-self-start md:justify-self-end"
+        />
+      </div>
+    </div>
+
+    <!-- FOOTER KOLONNER -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-16">
+      <!-- LOGO OG COPYRIGHT -->
+      <div class="flex flex-col items-center sm:items-start text-center sm:text-left order-last lg:order-0">
+        <img
+          src="/Vector.svg"
+          alt="logo"
+          class="mb-6 h-14 w-auto md:h-20 hover:animate-jump"
+        />
+
+        <Text class="text-center sm:text-left">
+          © 2025 BOOM BUTIK ApS, CVR: 44150875
+        </Text>
+      </div>
+
+      <!-- KONTAKT -->
+      <div>
+        <Heading htmlheading="h4" size="xsmall" weight="semibold" color="primary">
+          KONTAKT
+        </Heading>
+
+        <div class="mt-2 md:mt-4">
+          <Text>E-mail:</Text>
+          <a href="mailto:kontakt@boombutik.dk" class="hover:underline">
+            kontakt@boombutik.dk
+          </a>
+        </div>
+      </div>
+
+      <!-- KØBSBETINGELSER -->
+      <div>
+        <Heading htmlheading="h4" size="xsmall" weight="semibold" color="primary">
+          KØBSBETINGELSER
+        </Heading>
+
+        <ul class="space-y-2 mt-2 md:mt-4">
+          <li><a href="#" class="hover:underline">Levering</a></li>
+          <li><a href="#" class="hover:underline">Returnering</a></li>
+          <li><a href="#" class="hover:underline">Privatliv</a></li>
+          <li><a href="#" class="hover:underline">Handelsbetingelser</a></li>
+          <li><a href="#" class="hover:underline">Studierabat</a></li>
+        </ul>
+      </div>
+
+      <!-- FYSISK BUTIK -->
+      <div>
+        <Heading htmlheading="h4" size="xsmall" weight="semibold" color="primary">
+          FYSISK BUTIK
+        </Heading>
+
+        <div class="space-y-4 mt-2 md:mt-4">
+          <Text>
+            Blågårdsgade 14,<br />
+            2200 København
+          </Text>
+
+          <Text>
+            Åbent alle ugens dage:<br />
+            12.00 - 18.00
+          </Text>
+        </div>
+      </div>
+
+      <!-- SOCIALE MEDIER -->
+      <div>
+        <Heading htmlheading="h4" size="xsmall" weight="semibold" color="primary">
+          FØLG OS
+        </Heading>
+
+        <div class="flex items-center gap-4 mt-4 md:mt-4">
+          <a
+            href="https://www.instagram.com/boombutik/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-transform duration-200 hover:scale-110"
+            aria-label="Instagram logo ikon"
+          >
+            <Instagram size={32} strokeWidth={2.2} class="w-6 h-6" />
+          </a>
+
+          <a
+            href="https://www.facebook.com/profile.php?id=100063946218136"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="transition-transform duration-200 hover:scale-110
+            aria-label='Facebook logo'"
+          >
+            <Facebook size={32} strokeWidth={2.2} class="w-6 h-6" />
+          </a>
+
+          <a
+            href="https://www.tiktok.com/@boombutik"
+            target="_blank"
+            class="transition-transform duration-200 hover:scale-110"
+          >
+            <img src="/tik-tok.svg" alt="Tiktok ikon" class="w-6 h-6"/>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</footer>

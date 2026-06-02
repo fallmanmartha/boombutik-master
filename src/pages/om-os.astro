@@ -1,0 +1,323 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import Heading from "../components/Heading.astro";
+import Text from "../components/Text.astro";
+
+// DEFINERER ALLE STEPS I SCROLL-SEKTIONEN.
+// HVERT STEP HAR EN TITEL, EN TEKST OG ET BILLEDE.
+const steps = [
+  {
+    title: "Boom Butik",
+    description:
+      "Kære kunde, håber du har det godt. Er så glad for at du har forvildet dig ind på vores lille side. Efterhånden er der mange, der af en eller anden grund ender herinde, så nu vil jeg endelig tage mig sammen til at skrive en hurtig tekst om, hvad det her er for en mærkelig forretning. Hvis nogen mod forventning skulle være interesseret i at oplyse sig om det.",
+    image: "/omos1.webp",
+  },
+  {
+    title: "Begyndelsen",
+    description:
+      "Det startede med at jeg kedede mig under den første coronalockdown og havde lyst til at lave lidt frisk business. Samtidig havde jeg så optur over Fruit of the Looms joggingtøj og gik i det hver dag. Pludselig fik jeg ideen til at bestille noget tøj hjem og sælge det på insta.",
+    image: "/omos2.webp",
+  },
+  {
+    title: "Fruit of the Boom",
+    description:
+      "Instaen kaldte jeg for Fruit of the Boom, og det blev så senere til vores nuværende cute navn. Så kunne man ellers bare skrive en DM og lave en bestilling, og så cyklede jeg København rundt med tøjet. Jeg turde ikke at tage så meget for tøjet, så dengang var priserne faktisk endnu lavere end de er i dag.",
+    image: "/omos3.webp",
+  },
+  {
+    title: "Hjælp fra venner",
+    description:
+      "En masse af mine venner støttede den lille forretning, og mange var også megasøde til at sende mig flotte billeder, som jeg kunne poste. Det hele var for hyggens skyld, håber jeg stadig man kan mærke, når man går ind på vores hjemmeside eller instaprofil, selvom det er blevet et rigtigt job.",
+    image: "/omos4.webp",
+  },
+  {
+    title: "Hjemmeside",
+    description:
+      "Det var en virkelig hyggelig sommer, men efterhånden blev det også rimelig stress at have lager derhjemme og at skulle nå rundt med pakkerne efter skole og sådan noget. Så jeg fik lavet en hjemmeside og allieret mig med et firma, som kunne stå for at sende ordrerne afsted. Jeg fik også et par gode venner ansat.",
+    image: "/omos5.webp",
+  },
+  {
+    title: "Samarbejder",
+    description:
+      "Samtidig begyndte vi at lave noget sej merch, fx til den lokale kebabbutik og min vens frokostrestaurant. Vi begyndte også at få nogle nye og virkelig random varer i butikken, fx lamper, vinglas og en enkelt bog.",
+    image: "/omos6.png",
+  },
+  {
+    title: "Hyggeprojekt",
+    description:
+      "Vi har også haft alle mulige andre projekter kørende, som jeg ikke engang orker at gå i gang med at remse op. Og vi vil nok blive ved med at få nye, random ideer. Men forhåbentlig kan man stadig mærke at butikken er et hyggeprojekt drevet af et hold gode venner.",
+    image: "/omos7.webp",
+  },
+  {
+    title: "End of Story",
+    description:
+      "Okay tusinde tak fordi du læste helt hertil. Ved ikke om du syntes det var spændende eller hvad, men er beæret over at du gad.\n\nHav det så godt du kan!\n\nKh Viggo",
+    image: "/omos8.webp",
+  },
+];
+---
+
+<MainLayout title="Om os">
+  <main class="lg:mt-main-top-desktop mt-main-top-mobile px-margin-mobile lg:px-margin-desktop">
+    <section id="steps-outer">
+
+      <!-- MOBIL: ÉT STICKY BILLEDE ØVERST. BILLEDET SKIFTES MED JAVASCRIPT, NÅR BRUGEREN SCROLLER TIL ET NYT STEP. TOP-24 GØR AT BILLEDET STANNAR UNDER MENUEN PÅ MOBIL. -->
+      <div
+        id="mobile-sticky-image"
+        class="md:hidden sticky top-24 z-20 pb-4 bg-white"
+      >
+        <img
+          src={steps[0].image}
+          alt={steps[0].title}
+          class="w-full aspect-4/2 object-cover object-center"
+        />
+      </div>
+
+      <!-- TABLET + DESKTOP: BILLEDERNE LIGGER I EN STICKY KOLONNE TIL HØJRE. HELE BILLEDLISTEN FLYTTES OP/NED MED TRANSFORM I JAVASCRIPT. -->
+      <div
+        id="sticky-images"
+        class="hidden md:block sticky md:top-24 lg:top-34 md:h-[80vh] lg:h-[75vh] overflow-hidden"
+      >
+        <div
+          class="images-inner absolute top-0 right-0 md:w-1/2 lg:w-6/10 flex flex-col transition-transform duration-700 ease-out"
+        >
+          {
+            steps.map((step, i) => (
+              <img
+                src={step.image}
+                alt={step.title}
+                data-index={i}
+                class="mb-4 step-img w-full md:h-4/10 lg:h-120 object-cover object-center opacity-15 transition-opacity duration-700 ease-out"
+              />
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- INDHOLDET TRÆKKES OP PÅ TABLET/DESKTOP, SÅ TEKST OG BILLEDE LIGGER VED SIDEN AF HINANDEN. -->
+      <div
+        id="steps-content"
+        class="relative md:-mt-[80vh] lg:-mt-[75vh] z-2"
+      >
+        <div class="mx-auto md:px-8">
+
+          <!-- EKSTRA LUFT I TOPPEN PÅ TABLET/DESKTOP -->
+          <div class="hidden md:block md:pt-20 lg:pt-36"></div>
+
+          <!-- TEKSTLISTEN ER STICKY. PÅ MOBIL LIGGER DEN LIDT LÆNGERE UNDER STICKY-BILLEDET. PÅ TABLET/DESKTOP LIGGER DEN TIL VENSTRE FOR BILLEDET. -->
+          <div
+            class="steps-list sticky top-[45vh] md:top-24 lg:top-44 max-w-md md:max-w-4/10 lg:max-w-md h-[55vh] md:h-[80vh] lg:h-[75vh] overflow-hidden pt-6 md:pt-0"
+          >
+
+            <!-- DENNE INNER-DIV FLYTTES MED TRANSFORM, SÅ DET AKTIVE STEP KOMMER ØVERST. -->
+            <div
+              class="steps-list-inner relative transition-transform duration-700 ease-out"
+            >
+              {
+                steps.map((step, i) => (
+                  <div
+                    class="step-item flex items-start pb-3 transition-opacity duration-1000 ease-out last:pb-0"
+                    data-step={i}
+                  >
+                    <div class="w-full">
+
+                      <!-- STEP-TITEL. AKTIVE OG TIDLIGERE TITLER FÅR HØJERE OPACITY VIA JS. -->
+                      <div
+                        class="step-title mb-2 opacity-15 transition-opacity duration-1000"
+                        data-index={i}
+                      >
+                        <Heading htmlheading="h2" size="large" weight="semibold" color="primary">
+                          {step.title}
+                        </Heading>
+                      </div>
+
+                      <!-- BESKRIVELSEN ER LUKKET SOM STANDARD MED GRID-ROWS-[0FR]. NÅR STEP BLIVER AKTIVT, FÅR DEN CLASSEN ACTIVE OG ÅBNER SIG. -->
+                      <div
+                        class="step-desc-wrap grid grid-rows-0fr overflow-hidden transition-grid-template-rows duration-500 ease-out"
+                        data-index={i}
+                      >
+                        <div
+                          class="step-desc overflow-hidden m-0 pt-1 mb-8 lg:mb-15 opacity-0 transition-opacity duration-500 ease-out"
+                          data-index={i}
+                        >
+                          <Text
+                            color="primary"
+                            set:html={step.description.replace(/\n/g, "<br/>")}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              }
+
+              <!-- EKSTRA LUFT EFTER SIDSTE STEP, SÅ DET IKKE STOPPER FOR BRAT. -->
+              <div class="h-20 lg:h-30"></div>
+            </div>
+          </div>
+
+          <!-- USYNLIGT SCROLL-OMRÅDE. DET GIVER NOK SCROLL-LÆNGDE TIL AT ANIMATIONEN KAN SKIFTE MELLEM ALLE STEPS. -->
+          <div class="h-[300vh] lg:h-[400vh] pointer-events-none"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+</MainLayout>
+
+<style>
+  /* AKTIVT BILLEDE PÅ TABLET/DESKTOP FÅR FULD OPACITY */
+  .step-img.active {
+    opacity: 1;
+  }
+
+  /* TIDLIGERE STEPS SKJULES VISUELT, SÅ KUN DET AKTIVE/FREMTIDIGE INDHOLD FYLDER */
+  .step-item.passed {
+    opacity: 0;
+  }
+
+  /* AKTIV TITEL FÅR FULD OPACITY */
+  .step-title.active {
+    opacity: 1;
+  }
+
+  /* ÅBNER TEKSTFELTET FOR AKTIVE STEPS */
+  .step-desc-wrap.active {
+    grid-template-rows: 1fr;
+  }
+
+  /* GØR SELVE TEKSTEN SYNLIG */
+  .step-desc.active {
+    opacity: 1;
+  }
+
+  /* PÅ MOBIL SKJULES TIDLIGERE STEPS OGSÅ, SÅ TEKSTEN IKKE OVERLAPPER STICKY-BILLEDET */
+  @media (max-width: 767px) {
+    .step-item.passed {
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  // HENTER DE VIGTIGSTE DOM-ELEMENTER, SOM SKAL STYRES MED SCROLL.
+  const outer = document.getElementById("steps-outer")!;
+  const listInner = document.querySelector<HTMLElement>(".steps-list-inner")!;
+  const imagesInner = document.querySelector<HTMLElement>(".images-inner");
+  const images = document.querySelectorAll<HTMLImageElement>(".step-img");
+
+  // MOBILBILLEDET ER SEPARAT, FORDI MOBIL-LAYOUTET KUN VISER ÉT STICKY BILLEDE.
+  const mobileStickyImage = document.querySelector<HTMLImageElement>("#mobile-sticky-image img");
+
+  // ALLE TEKSTDELE, SOM SKAL AKTIVERES/DEAKTIVERES.
+  const stepItems = document.querySelectorAll<HTMLElement>(".step-item");
+  const titles = document.querySelectorAll<HTMLElement>(".step-title");
+  const descWraps = document.querySelectorAll<HTMLElement>(".step-desc-wrap");
+  const descs = document.querySelectorAll<HTMLElement>(".step-desc");
+  const totalSteps = stepItems.length;
+
+  // SIMPEL KOPI AF TITEL + BILLEDE TIL BRUG PÅ MOBIL, FORDI MOBILBILLEDET IKKE FINDES I DEN SAMME BILLEDLISTE SOM DESKTOP/TABLET.
+  const stepsData = [
+    { title: "Boom Butik", image: "/omos1.webp" },
+    { title: "Begyndelsen", image: "/omos2.webp" },
+    { title: "Fruit of the Boom", image: "/omos3.webp" },
+    { title: "Hjælp fra venner", image: "/omos4.webp" },
+    { title: "Hjemmeside", image: "/omos5.webp" },
+    { title: "Samarbejder", image: "/omos6.png" },
+    { title: "Hyggeprojekt", image: "/omos7.webp" },
+    { title: "End of Story", image: "/omos8.webp" },
+  ];
+
+  // GEMMER HVILKET STEP DER ER AKTIVT, SÅ VI IKKE OPDATERER UNØDVENDIGT.
+  let activeStep = -1;
+
+  function setActive(index: number) {
+    // STOPPER FUNKTIONEN, HVIS SAMME STEP ALLEREDE ER AKTIVT.
+    if (index === activeStep) return;
+
+    activeStep = index;
+
+    // BRUGES TIL AT SKELNE MELLEM MOBIL, TABLET OG DESKTOP.
+    const isTabletOrDesktop = window.innerWidth >= 768;
+    const isDesktop = window.innerWidth >= 1024;
+
+    // DESKTOP HAR LIDT EKSTRA AFSTAND I TOPPEN, SÅ TEKSTEN IKKE GÅR HELT OP MOD HEADEREN.
+    const stickyGap = isDesktop ? 80 : 0;
+
+    // FLYTTER TEKSTLISTEN, SÅ DET AKTIVE STEP STÅR ØVERST I STICKY-OMRÅDET.
+    const targetItem = stepItems[index];
+
+    if (targetItem) {
+      const offset = Math.max(0, targetItem.offsetTop - stickyGap);
+      listInner.style.transform = `translateY(${-offset}px)`;
+    }
+
+    // PÅ TABLET/DESKTOP FLYTTES BILLEDLISTEN, SÅ DET AKTIVE BILLEDE VISES.
+    if (isTabletOrDesktop) {
+      const targetImg = images[index];
+
+      if (targetImg && imagesInner) {
+        const imgOffset = Math.max(0, targetImg.offsetTop);
+        imagesInner.style.transform = `translateY(${-imgOffset}px)`;
+      }
+    }
+
+    // PÅ MOBIL SKIFTES SRC/ALT PÅ DET STICKY BILLEDE I STEDET FOR AT FLYTTE EN BILLEDLISTE.
+    if (mobileStickyImage && stepsData[index]) {
+      mobileStickyImage.src = stepsData[index].image;
+      mobileStickyImage.alt = stepsData[index].title;
+    }
+
+    // SÆTTER AKTIV CLASS PÅ DET BILLEDE, DER MATCHER AKTIVT STEP.
+    images.forEach((img, i) => {
+      img.classList.toggle("active", i === index);
+    });
+
+    // SKJULER TIDLIGERE STEPS, SÅ TEKSTEN IKKE OVERLAPPER.
+    stepItems.forEach((el, i) => {
+      el.classList.toggle("passed", isTabletOrDesktop && i < index);
+    });
+
+    // TITLER, BESKRIVELSER OG TEKST ÅBNES GRADVIST OP TIL OG MED AKTIVT STEP.
+    titles.forEach((el, i) => {
+      el.classList.toggle("active", i <= index);
+    });
+
+    descWraps.forEach((el, i) => {
+      el.classList.toggle("active", i <= index);
+    });
+
+    descs.forEach((el, i) => {
+      el.classList.toggle("active", i <= index);
+    });
+  }
+
+  function getActiveStepFromScroll() {
+    // FINDER HVOR LANGT BRUGEREN HAR SCROLLET GENNEM HELE SEKTIONEN.
+    const rect = outer.getBoundingClientRect();
+
+    const start = window.innerHeight * 0.1;
+    const total = rect.height - window.innerHeight * 0.9;
+
+    // PROGRESS BEGRÆNSES MELLEM 0 OG 1.
+    const progress = Math.min(1, Math.max(0, (-rect.top + start) / total));
+
+    // LAVER BREAKPOINTS FOR HVERT STEP.
+    const bp = Array.from({ length: totalSteps }, (_, i) => i / totalSteps);
+
+    // FINDER DET BREAKPOINT, DER ER TÆTTEST PÅ DEN NUVÆRENDE SCROLL-POSITION.
+    return bp.reduce((best, v, i) => {
+      return Math.abs(progress - v) < Math.abs(progress - bp[best]) ? i : best;
+    }, 0);
+  }
+
+  function onScroll() {
+    setActive(getActiveStepFromScroll());
+  }
+
+  // STARTER PÅ FØRSTE STEP.
+  setActive(0);
+
+  // OPDATERER AKTIVT STEP VED SCROLL OG RESIZE.
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+</script>

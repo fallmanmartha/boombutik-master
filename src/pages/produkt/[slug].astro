@@ -1,0 +1,360 @@
+---
+// IMPORT AF LAYOUT, DATA OG KOMPONENTER
+import MainLayout from "../../layouts/MainLayout.astro";
+import { fetchProducts } from "../../lib/supabase";
+import Heading from "../../components/Heading.astro";
+import Button from "../../components/Button.astro";
+import Text from "../../components/Text.astro";
+import Link from "../../components/Link.astro";
+import ProductCard from "../../components/ProductCard.astro";
+
+// HENT PRODUKT UD FRA SLUG
+const { slug } = Astro.params;
+const products = await fetchProducts();
+const product = products.find((p: any) => p.slug === slug);
+
+// REDIRECT HVIS PRODUKTET IKKE FINDES
+if (!product) return Astro.redirect("/listview");
+
+// KLARGØR PRODUKTDATA TIL ALPINE.JS
+const firstColor = product.colors[0] ?? null;
+const imagesJson = JSON.stringify(product.images);
+---
+
+<MainLayout title={product.name}>
+  <main class="lg:mt-main-top-desktop mt-main-top-mobile px-margin-mobile lg:px-margin-desktop">
+    <!-- BREADCRUMB NAVIGATION -->
+    <div class="mb-6 flex items-center gap-2">
+      <Text><Link href="/">hjem</Link></Text>
+      <span>/</span>
+      <Text><Link href="/listview">Alle produkter</Link></Text>
+      <span>/</span>
+      <Text><Link href="">{product.name}</Link></Text>
+    </div>
+
+    <!-- PRODUKTVISNING -->
+    <div
+      x-data={`{
+        activeColor: '${firstColor?.id ?? ""}',
+        activeSize: null,
+        sizes: ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'],
+        images: ${imagesJson},
+
+        get filteredImages() {
+          return this.images.filter(i => i.color_id === this.activeColor);
+        },
+
+        setColor(colorId) {
+          this.activeColor = colorId;
+
+          this.$nextTick(() => {
+            this.$refs.carousel.scrollTo({ left: 0, behavior: 'instant' });
+          });
+        },
+
+        scrollCarousel(dir) {
+          const carousel = this.$refs.carousel;
+          const perPage = window.innerWidth >= 768 ? 2 : 1;
+          const itemWidth = carousel.clientWidth / perPage;
+
+          carousel.scrollBy({
+            left: dir * itemWidth,
+            behavior: 'smooth'
+          });
+        }
+      }`}
+      class="grid grid-cols-1 lg:grid-cols-3 gap-12"
+    >
+      <!-- VENSTRE SIDE: PRODUKTBILLEDER -->
+      <div class="lg:col-span-2 flex flex-col">
+        <div class="relative">
+          <!-- BILLEDKARUSEL DER STARTER PÅ FØRSTE BILLEDE -->
+          <div
+            x-ref="carousel"
+            class="flex overflow-x-auto scrollbar-hide gap-grid-gap-mobile lg:gap-grid-gap-desktop"
+          >
+            <template x-for="(img, i) in filteredImages" :key="i">
+              <div class="shrink-0 w-full md:w-[calc(50%-4px)] aspect-3/4 lg:aspect-3/4.5 overflow-hidden">
+                <img :src="img.storage_path" :alt="img.alt_text ?? ''" class="w-full h-full object-cover" />
+              </div>
+            </template>
+          </div>
+
+          <!-- FORRIGE BILLEDE KNAP -->
+          <button
+            x-on:click="scrollCarousel(-1)"
+            class="absolute left-2 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center z-10"
+          >
+            <img src="/smallarrow.svg" alt="pil" class="w-full h-full object-cover rotate-90 invert" />
+          </button>
+
+          <!-- NÆSTE BILLEDE KNAP -->
+          <button
+            x-on:click="scrollCarousel(1)"
+            class="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center z-10"
+          >
+            <img src="/smallarrow.svg" alt="pil" class="w-full h-full object-cover -rotate-90 invert" />
+          </button>
+        </div>
+      </div>
+
+      <!-- HØJRE SIDE: PRODUKTINFORMATION -->
+      <div class="flex flex-col gap-4 lg:mt-0 -mt-6">
+        <!-- PRODUKTNAVN -->
+        <Heading htmlheading="h1" size="xlarge" font="heading" color="primary" weight="bold">{product.name}</Heading>
+
+        <!-- PRODUKTFEATURES -->
+        {product.features.length > 0 && (
+          <ul class="flex flex-row gap-3 mb-12">
+            {product.features.map((f: string) => (
+              <li class="bg-banner-primary px-2 py-1"><Text variant="tag">{f}</Text></li>
+            ))}
+          </ul>
+        )}
+
+        <!-- PRODUKTPRIS -->
+        <Heading htmlheading="h4" size="small" font="heading" color="primary" weight="medium">
+          {product.price} {product.currency}
+        </Heading>
+
+        <!-- FARVEVALG -->
+        {product.colors.length > 0 && (
+          <div class="flex gap-2 flex-wrap">
+            {product.colors.map((color: any) => (
+              <button
+                x-on:click={`setColor('${color.id}')`}
+                class="w-8 h-8 rounded-full border"
+                :class={`activeColor === '${color.id}' ? 'border-border-secondary scale-105' : 'border-border-primary hover:border-border-primary'`}
+                style={`background-color: ${color.hex}`}                  
+                title={color.name}
+              />
+            ))}
+          </div>
+        )}
+
+        <!-- STØRRELSESVALG MED STATISKE STØRRELSER FRA XXS TIL XXL -->
+        <div>
+          <div class="flex gap-1.5 flex-wrap">
+            <template x-for="size in sizes" :key="size">
+              <button
+                x-on:click="activeSize = size"
+                class="font-sans text-sm w-11 h-11 transition-all"
+                :class="activeSize === size ? ' bg-button-secondary-default text-text-button-primary' : 'border-none hover:underline'"
+                x-text="size"
+              ></button>
+            </template>
+          </div>
+        </div>
+
+        <!-- LÆG I KURV KNAP -->
+        <Button variant="primary" size="large">
+          Læg i kurv
+        </Button>
+
+        <!-- PRODUKTINFORMATION SOM ACCORDIONS -->
+        <div class="mt-10">
+          <!-- BESKRIVELSE -->
+          {product.description && (
+            <details>
+              <summary class="py-2 cursor-pointer list-none flex justify-between">
+                <Heading htmlheading="h4" size="xsmall" font="heading" color="primary" weight="semibold">Beskrivelse</Heading>
+                <span class="text-text-primary">+</span>
+              </summary>
+              <Text teksttype="brødtekst">{product.description}</Text>
+            </details>
+          )}
+
+          <!-- MATERIALE -->
+          {product.material && (
+            <details>
+              <summary class="py-2 cursor-pointer list-none flex justify-between">
+                <Heading htmlheading="h4" size="xsmall" font="heading" color="primary" weight="semibold">Materiale</Heading>
+                <span class="text-text-primary">+</span>
+              </summary>
+              <Text>{product.material}</Text>
+            </details>
+          )}
+
+          <!-- STØRRELSESGUIDE -->
+          {product.size_guide && (
+            <details>
+              <summary class="py-2 cursor-pointer list-none flex justify-between">
+                <Heading htmlheading="h4" size="xsmall" font="heading" color="primary" weight="semibold">Størrelsesguide</Heading>
+                <span class="text-text-primary">+</span>
+              </summary>
+              <Text>{product.size_guide}</Text>
+            </details>
+          )}
+
+          <!-- LEVERING -->
+          {product.delivery && (
+            <details>
+              <summary class="py-2 cursor-pointer list-none flex justify-between">
+                <Heading htmlheading="h4" size="xsmall" font="heading" color="primary" weight="semibold">Levering</Heading>
+                <span class="text-text-primary">+</span>
+              </summary>
+              <Text>{product.delivery}</Text>
+            </details>
+          )}
+
+          <!-- RETURNERING -->
+          {product.returns && (
+            <details>
+              <summary class="py-2 cursor-pointer list-none flex justify-between">
+                <Heading htmlheading="h4" size="xsmall" font="heading" color="primary" weight="semibold">Returnering</Heading>
+                <span class="text-text-primary">+</span>
+              </summary>
+              <Text>{product.returns}</Text>
+            </details>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <!-- STYLED BY FRIENDS OF BOOM SEKTION -->
+    <section class="lg:mt-section-desktop mt-section-mobile">
+      {product.friends_images.length > 0 && (
+        <div class="my-10">
+          <Heading htmlheading="h2" size="large" font="heading" color="primary" weight="semibold">Stylet af friends of boom</Heading>
+
+          <!-- FRIENDS OF BOOM BILLEDGRID -->
+          <div class="grid lg:grid-cols-6 grid-cols-3 gap-2 mt-3">
+            {product.friends_images.map((img: { storage_path: string; alt_text?: string }, index: number) => (
+              <div
+                class="aspect-3/4 overflow-hidden reveal-on-scroll opacity-0 translate-y-6 transition-all duration-500"
+                data-index={index}
+              >
+                <img src={img.storage_path} alt={img.alt_text ?? ""} class="w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
+
+    <!-- ANIMATION AF FRIENDS OF BOOM BILLEDER -->
+    <script>
+      // HENTER ALLE BILLEDER, DER SKAL ANIMERES IND VED SCROLL
+      const items = document.querySelectorAll<HTMLElement>(".reveal-on-scroll");
+
+      // OBSERVER HOLDER ØJE MED, HVORNÅR BILLEDERNE KOMMER IND I VIEWPORT
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          // STOPPER HER, HVIS BILLEDET IKKE ER SYNLIGT ENDNU
+          if (!entry.isIntersecting) return;
+
+          // HENTER DET AKTUELLE BILLEDE
+          const el = entry.target as HTMLElement;
+
+          // HENTER BILLEDETS INDEX FRA DATA-INDEX
+          const index = Number(el.dataset.index ?? 0);
+
+          // DEFINERER ANTAL KOLONNER: 6 PÅ DESKTOP, 3 PÅ MOBIL/TABLET
+          const cols = window.innerWidth >= 1024 ? 6 : 3;
+
+          // BEREGNER HVILKEN RÆKKE BILLEDET LIGGER I
+          const row = Math.floor(index / cols);
+
+          // FJERNER SKJULTE CLASSES MED DELAY, SÅ RÆKKERNE ANIMERER IND EFTER HINANDEN
+          setTimeout(() => {
+            el.classList.remove("opacity-0", "translate-y-6");
+          }, row * 300);
+
+          // STOPPER MED AT OBSERVERE BILLEDET, NÅR DET ER BLEVET VIST
+          observer.unobserve(el);
+        });
+      }, { threshold: 0.1 });
+
+      // STARTER OBSERVEREN PÅ ALLE BILLEDER
+      items.forEach((el) => observer.observe(el));
+    </script>
+
+    <!-- ANMELDELSE SEKTION -->
+    <section>
+      <!-- OVERSKRIFT OG KNAP TIL ANMELDELSER -->
+      <div class="flex gap-2 lg:justify-between lg:mt-section-desktop mt-section-mobile">
+        <Heading htmlheading="h2" size="large" font="heading" color="primary" weight="semibold">Kundeanmeldelser</Heading>
+
+        <div class="hidden lg:block">
+          <Button variant="secondary" size="small">Skriv en anmeldelse</Button>
+        </div>
+      </div>
+
+      <!-- ANMELDELSE SCORE -->
+      <div class="mt-2">
+        <Heading htmlheading="h5" size="xsmall" font="heading" color="primary" weight="medium">4.8/5 (176)</Heading>
+      </div>
+
+      <!-- ANMELDELSE GRID -->
+      <div class="lg:grid grid-cols-3 gap-12 lg:mt-10 mt-6">
+        <!-- ANMELDELSE 1 -->
+        <div class="flex flex-col gap-2 mt-5">
+          <div class="flex">
+            <img src="/star.svg" alt="stjerne" />
+            <img src="/star.svg" alt="stjerne" />
+            <img src="/star.svg" alt="stjerne" />
+            <img src="/star.svg" alt="stjerne" />
+            <img src="/star.svg" alt="stjerne" />
+          </div>
+          <Text teksttype="tag">1/5-2026</Text>
+          <Heading htmlheading="h4" size="xsmall" font="heading" color="primary" weight="semibold">Perfekt pasform!</Heading>
+          <Text>Har ledt længe efter bukser der sidder rigtigt, og disse er bare perfekte. Materialet er blødt og behageligt, og de holder faconen efter vask. Kan varmt anbefales!</Text>
+        </div>
+
+        <!-- ANMELDELSE 2 -->
+        <div class="flex flex-col gap-2 mt-5">
+          <div class="flex">
+            <img src="/star.svg" alt="stjerne" />
+            <img src="/star.svg" alt="stjerne" />
+            <img src="/star.svg" alt="stjerne" />
+            <img src="/star.svg" alt="stjerne" />
+            <img src="/star.svg" alt="stjerne" />
+          </div>
+          <Text teksttype="tag">1/5-2026</Text>
+          <Heading htmlheading="h4" size="xsmall" font="heading" color="primary" weight="semibold">Mine nye yndlingsbukser</Heading>
+          <Text>Har nu haft dem i en måned og bruger dem hele tiden. De er nemme at style og fungerer både til hverdag og når man skal se lidt mere præsentabel ud. Super tilfreds!</Text>
+        </div>
+
+        <!-- ANMELDELSE 3 -->
+        <div class="flex flex-col gap-2 mt-5">
+          <div class="flex">
+            <img src="/star.svg" alt="stjerne" />
+            <img src="/star.svg" alt="stjerne" />
+            <img src="/star.svg" alt="stjerne" />
+            <img src="/star.svg" alt="stjerne" />
+            <img src="/star.svg" alt="stjerne" />
+          </div>
+          <Text teksttype="tag">1/5-2026</Text>
+          <Heading htmlheading="h4" size="xsmall" font="heading" color="primary" weight="semibold">Elsker den så meget!</Heading>
+          <Text>ELSKER disse bukser, amen altså. Jeg ved slet ikke hvad jeg skal skrive. De er bare gode at gå i, have på og slappe af i.</Text>
+        </div>
+
+        <!-- MOBIL KNAP TIL ANMELDELSE -->
+        <div class="lg:hidden mt-10">
+          <Button variant="secondary" size="small">Skriv en anmeldelse</Button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ANDRE KØBTE OGSÅ SEKTION -->
+    <section class="lg:mt-section-desktop mt-section-mobile mb-5 lg:mb-8">
+      <div class="mb-3">
+        <Heading htmlheading="h2" size="large" font="heading" color="primary" weight="semibold">Andre købte også</Heading>
+      </div>
+
+      <!-- MOBIL SLIDER MED PRODUKTER -->
+      <div class="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 scrollbar-hide">
+        {products.slice(0, 4).map((product: any) => (
+          <div class="shrink-0 w-3/4 snap-start">
+            <ProductCard product={product} />
+          </div>
+        ))}
+      </div>
+
+      <!-- DESKTOP GRID MED PRODUKTER -->
+      <div class="hidden md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-grid-gap-desktop">        
+        {products.slice(0, 4).map((product: any) => <ProductCard product={product} />)}
+      </div>
+    </section>
+  </main>
+</MainLayout>

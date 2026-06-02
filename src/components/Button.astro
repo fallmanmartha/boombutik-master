@@ -1,0 +1,26 @@
+---
+// Henter parametrene fra Astro.props
+const { variant = "primary", size = "large", font = "font" } = Astro.props;
+
+//Definer den styling (Tailwind classes, der gør sig gældende for alle knapper)
+const buttonStyling = "font-heading cursor-pointer";
+
+//Definer den styling, der gør sig gældende for de forskellige varianter
+const variantClasses = {
+  primary: "bg-button-primary-default active:bg-button-primary-active hover:bg-button-primary-hover text-text-button-primary hover:text-text-button-secondary",
+  secondary: " bg-button-secondary-default active:bg-button-secondary-active hover:bg-button-secondary-hover text-text-button-primary hover:text-text-button-secondary " /* border-secondary-500 */,
+};
+
+//Definer den styling (Tailwind classes), der gør sig gældende for de forskelligeog størrelser.
+const sizeClasses = {
+  large: "lg:text-button-large-desktop text-button-large-mobile  lg:p-button-large-desktop p-button-large-mobile",
+  small: "lg:text-button-small-desktop text-button-small-mobile lg:p-button-small-desktop p-button-small-mobile",
+};
+
+const stylingClasses = {
+  font: "uppercase font-medium",
+};
+---
+
+<!--Sæt classes for den pågældende knap sammen ved hjælp af Astros class:list -->
+<button class:list={[buttonStyling, variantClasses[variant], sizeClasses[size], stylingClasses[font]]}><slot /></button>

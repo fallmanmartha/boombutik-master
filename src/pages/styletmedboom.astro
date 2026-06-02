@@ -1,0 +1,251 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import Heading from "../components/Heading.astro";
+
+// DEFINERER ALLE BILLEDER, TITLER, LINKS OG PLACERINGER I GRIDDET
+const images = [
+  {
+    src: "look1.webp",
+    title: "Sweatshorts",
+    link: "/produkt/sweatshorts",
+    class: "col-span-4 mt-0 md:col-span-4 md:col-start-1 md:mt-2 lg:col-span-4 lg:col-start-1 lg:mt-6 lg:z-20 intersect:animate-fade"
+  },
+
+  {
+    src: "look2.webp",
+    title: "Boxer shorts",
+    link: "/produkt/boxershorts",
+    class: "col-span-3 col-start-4 mt-8 md:col-span-2 md:col-start-5 md:-mt-6 lg:col-span-2 lg:col-start-5 lg:-mt-10 lg:z-30 intersect:animate-fade"
+  },
+
+  {
+    src: "look3.webp",
+    title: "Sweatpants",
+    link: "/produkt/sweatpants",
+    class: "col-span-4 mt-12 md:col-span-4 md:col-start-5 md:mt-10 md:z-30 lg:col-span-4 lg:col-start-8 lg:-mt-28 lg:z-10 intersect:animate-fade"
+  },
+
+  {
+    src: "look4.webp",
+    title: "Skjorte",
+    link: "/produkt/skjorte",
+    class: "col-span-3 col-start-4 mt-10 md:col-span-2 md:col-start-4 md:-mt-10 md:z-20 lg:col-span-2 lg:col-start-9 lg:-mt-8 lg:z-40 intersect:animate-fade"
+  },
+
+  {
+    src: "look5.webp",
+    title: "Crewset",
+    link: "/produkt/crewneckset",
+    class: "col-span-5 mt-14 md:col-span-5 md:col-start-2 md:mt-8 md:z-40 lg:col-span-4 lg:col-start-5 lg:mt-10 lg:z-30 intersect:animate-fade"
+  },
+
+  {
+    src: "look6.webp",
+    title: "Kortærmet polo",
+    link: "/produkt/short-sleeve-polo",
+    class: "col-span-3 col-start-4 mt-8 md:col-span-3 md:col-start-6 md:-mt-10 md:z-30 lg:col-span-3 lg:col-start-10 lg:-mt-28 lg:z-30 intersect:animate-fade"
+  },
+
+  {
+    src: "look7.webp",
+    title: "Bomuldsbukser",
+    link: "/produkt/bomuldsbukser",
+    class: "col-span-4 mt-16 md:col-span-4 md:col-start-1 md:mt-12 lg:col-span-4 lg:col-start-1 lg:mt-16 lg:z-10 intersect:animate-fade"
+  },
+
+  {
+    src: "look8.webp",
+    title: "Trackpants",
+    link: "/produkt/track-pants",
+    class: "col-span-3 col-start-4 mt-6 md:col-span-2 md:col-start-5 md:-mt-6 md:z-20 lg:col-span-3 lg:col-start-8 lg:-mt-20 lg:z-20 intersect:animate-fade"
+  },
+
+  {
+    src: "look9.webp",
+    title: "Langærmet polo",
+    link: "/produkt/long-sleeve-polo",
+    class: "col-span-5 mt-16 md:col-span-5 md:col-start-3 md:mt-10 md:z-30 lg:col-span-5 lg:col-start-5 lg:mt-16 lg:z-30 intersect:animate-fade"
+  },
+
+  {
+    src: "look10.webp",
+    title: "Kortærmet polo",
+    link: "/produkt/short-sleeve-polo",
+    class: "col-span-4 col-start-2 mt-12 md:col-span-4 md:col-start-5 md:-mt-10 md:z-20 lg:col-span-4 lg:col-start-9 lg:-mt-32 lg:z-20 intersect:animate-fade"
+  },
+
+  {
+    src: "look11.webp",
+    title: "Crewneck",
+    link: "/produkt/crewneck",
+    class: "col-span-5 mt-16 md:col-span-4 md:col-start-1 md:mt-16 lg:col-span-4 lg:col-start-3 lg:mt-18 lg:z-10 intersect:animate-fade"
+  },
+
+  {
+    src: "look12.webp",
+    title: "T-shirt",
+    link: "/produkt/t-shirt",
+    class: "col-span-3 col-start-4 mt-10 md:col-span-2 md:col-start-6 md:mt-2 lg:col-span-2 lg:col-start-7 lg:-mt-28 lg:z-40 intersect:animate-fade"
+  },
+
+  {
+    src: "look13.webp",
+    title: "Bomuldsbukser",
+    link: "/produkt/bomuldsbukser",
+    class: "col-span-4 mt-16 md:col-span-4 md:col-start-4 md:mt-14 lg:col-span-4 lg:col-start-9 lg:row-span-1 lg:mt-20 lg:z-30 intersect:animate-fade"
+  },
+
+  {
+    src: "look14.webp",
+    title: "Bomulds bukser",
+    link: "/produkt/bomuldsbukser",
+    class: "col-span-3 col-start-4 mt-8 md:col-span-2 md:col-start-1 md:-mt-6 lg:col-span-2 lg:col-start-1 lg:row-span-1 lg:-mt-10 intersect:animate-fade"
+  },
+
+  {
+    src: "look15.webp",
+    title: "T-shirt",
+    link: "/produkt/t-shirt",
+    class: "col-span-3 mt-12 md:col-span-3 md:col-start-3 md:mt-10 md:z-30  lg:col-span-3 lg:col-start-3 lg:row-span-1 lg:mt-24 intersect:animate-fade"
+  },
+
+  {
+    src: "look16.webp",
+    title: "Skjorte",
+    link: "/produkt/skjorte",
+    class: "col-span-5 col-start-2 mt-14 md:col-span-5 md:col-start-2 md:-mt-10 md:z-20 lg:col-span-4 lg:col-start-7 lg:row-span-1 lg:-mt-16 lg:z-20 intersect:animate-fade"
+  },
+
+  {
+    src: "look17.webp",
+    title: "Hoodie",
+    link: "/produkt/hoodie",
+    class: "col-span-3 mt-12 md:col-span-2 md:col-start-7 md:mt-8 lg:col-span-2 lg:col-start-11 lg:row-span-1 lg:mt-12 intersect:animate-fade"
+  },
+
+  {
+    src: "look18.webp",
+    title: "Kortærmet polo",
+    link: "/produkt/short-sleeve-polo",
+    class: "col-span-5 mt-16 md:col-span-5 md:col-start-1 md:mt-20 md:z-30 lg:col-span-5 lg:col-start-1 lg:row-span-1 lg:mt-32 intersect:animate-fade"
+  },
+
+  {
+    src: "look19.webp",
+    title: "Sweatpants",
+    link: "/produkt/sweatpants",
+    class: "col-span-3 col-start-4 mt-10 md:col-span-2 md:col-start-5 md:-mt-8 md:z-20 lg:col-span-2 lg:col-start-6 lg:row-span-1 lg:-mt-8 intersect:animate-fade"
+  },
+
+  {
+    src: "look20.webp",
+    title: "Sweatpants",
+    link: "/produkt/sweatpants",
+    class: "col-span-5 mt-16 md:col-span-4 md:col-start-4 md:mt-10 lg:col-span-4 lg:col-start-9 lg:row-span-1 lg:mt-20 intersect:animate-fade"
+  },
+
+  {
+    src: "look21.webp",
+    title: "Sweatpants",
+    link: "/produkt/sweatpants",
+    class: "col-span-3 col-start-4 mt-8 md:col-span-3 md:col-start-2 md:mt-14 md:z-30 lg:col-span-3 lg:col-start-4 lg:row-span-1 lg:mt-28 intersect:animate-fade"
+  },
+
+  {
+    src: "look22.webp",
+    title: "Bomulds bukser",
+    link: "/produkt/bomuldsbukser",
+    class: "col-span-5 col-start-2 mt-16 md:col-span-5 md:col-start-3 md:-mt-8 md:z-20 lg:col-span-5 lg:col-start-8 lg:row-span-1 lg:-mt-12 intersect:animate-fade"
+  },
+];
+---
+
+<MainLayout title="Friends of Boom">
+  <!-- MAIN WRAPPER FOR FRIENDS OF BOOM-SIDEN -->
+  <main class="lg:mt-main-top-desktop mt-main-top-mobile">
+
+    <!-- SEKTION DER HOLDER OVERSKRIFT OG BILLEDEGRID -->
+    <section class="overflow-hidden">
+
+      <!-- SIDEOVERSKRIFT -->
+      <div class="mb-4 px-margin-mobile lg:px-margin-desktop">
+        <Heading
+          htmlheading="h1"
+          size="xlarge"
+          weight="bold"
+          color="primary"
+        >
+          Friends of Boom
+        </Heading>
+      </div>
+
+      <!-- RESPONSIVT GRID MED ALLE LOOK-BILLEDER -->
+      <div class="grid grid-cols-6 gap-x-2 gap-y-2 md:grid-cols-8 md:gap-x-4 md:gap-y-3 lg:grid-cols-12 lg:gap-x-8 lg:gap-y-4">
+        {images.map((image) => (
+
+          <!-- LINK OMKRING HELE BILLEDEKORTET -->
+          <a href={image.link} class={`group relative block ${image.class}`}>
+
+            <!-- BILLEDEWRAPPER MED HOVER-EFFEKT -->
+            <div class="relative overflow-hidden">
+
+              <!-- LOOK-BILLEDE -->
+              <img
+                src={image.src}
+                alt={image.title}
+                class="block w-full object-cover transition duration-300 md:group-hover:brightness-75"
+                loading="lazy"
+              />
+
+              <!-- DESKTOP HOVER-OVERLAY MED PRODUKTTITEL OG PIL -->
+              <div class="absolute inset-0 hidden items-end opacity-0 transition duration-300 group-hover:opacity-100 md:flex">
+                <div class="flex w-full items-center justify-between px-4 py-4">
+
+                  <!-- PRODUKTTITEL PÅ DESKTOP HOVER -->
+                  <Heading
+                    htmlheading="h5"
+                    size="xsmall"
+                    weight="semibold"
+                    color="secondary"
+                  >
+                    {image.title}
+                  </Heading>
+
+                  <!-- PIL PÅ DESKTOP HOVER -->
+                  <img
+                    src="arrow.svg"
+                    alt=""
+                    class="w-10 invert"
+                  />
+
+                </div>
+              </div>
+
+              <!-- MOBILTEKST UNDER BILLEDET -->
+              <div class="mt-2 flex items-center justify-between px-1 md:hidden">
+
+                <!-- PRODUKTTITEL PÅ MOBIL -->
+                <Heading
+                  htmlheading="h5"
+                  size="xsmall"
+                  weight="semibold"
+                  color="primary"
+                >
+                  {image.title}
+                </Heading>
+
+                <!-- PIL PÅ MOBIL -->
+                <img
+                  src="arrow.svg"
+                  alt=""
+                  class="w-6"
+                />
+
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  </main>
+</MainLayout>

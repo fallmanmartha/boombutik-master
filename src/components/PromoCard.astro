@@ -1,0 +1,33 @@
+---
+// IMPORT AF KOMPONENTER
+import Heading from "./Heading.astro";
+import Text from "./Text.astro";
+
+// HENT DATA FRA PROPS
+const { image, title, href } = Astro.props;
+---
+
+<!-- PROMOCARD LINK -->
+<a href={href} class="flex flex-col group">
+  <!-- BILLEDEOMRÅDE -->
+  <div class="w-full aspect-3/4 overflow-hidden">
+    <!-- PROMOCARD BILLEDE -->
+    <img src={image} alt={title} class="w-full h-full object-cover" />
+  </div>
+
+  <!-- TEKSTINDHOLD -->
+  <div class="pt-3 flex flex-col gap-1">
+    <!-- TITEL -->
+    <Heading htmlheading="h5" size="xsmall" font="heading" color="primary" weight="semibold">
+      {title}
+    </Heading>
+
+    <!-- LINKTEKST -->
+    <Text color="primary">Udforsk udvalg</Text>
+
+    <!-- PIL IKON -->
+    <div class="w-12 h-full pt-2">
+      <img src="/arrow.svg" alt="Arrow on promocard" class="w-full h-full object-cover" />
+    </div>
+  </div>
+</a>

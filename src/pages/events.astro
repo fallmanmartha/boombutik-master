@@ -1,0 +1,170 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import Heading from "../components/Heading.astro";
+import Text from "../components/Text.astro";
+---
+
+<MainLayout title="Events">
+  <!-- MAIN WRAPPER FOR HELE EVENTS-SIDEN -->
+  <main class="w-full h-screen flex flex-col px-margin-mobile lg:px-margin-desktop">
+    <!-- SCROLL-CONTAINER MED VERTIKAL SNAP MELLEM EVENTS -->
+    <div id="events-scroll" class="flex-1 overflow-y-scroll snap-y snap-mandatory scrollbar-hide">
+      <!-- SEKTION 1: DISTORTION EVENT -->
+      <section class="snap-start h-full bg-body-primary flex items-center gap-2 overflow-x-auto lg:overflow-x-hidden snap-x snap-mandatory lg:snap-none scrollbar-hide">
+        <!-- TEKSTKORT MED DATO, TITEL, BESKRIVELSE OG KALENDERKNAP -->
+        <div class="group relative shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start bg-blue-900 text-text-secondary overflow-hidden cursor-pointer" style="height: 70vh;">
+          <!-- DATO OG EVENTNAVN -->
+          <div class="absolute top-0 left-0 p-4 sm:p-5 lg:p-6 z-10">
+            <Heading htmlheading="h2" size="large" weight="semibold" color="secondary">6. juni 2026</Heading>
+            <Heading htmlheading="h3" size="xsmall" weight="semibold" color="secondary">DISTORTION</Heading>
+          </div>
+
+          <!-- PIL SOM VISES PÅ DESKTOP FØR HOVER -->
+          <div class="hidden lg:flex absolute inset-0 flex-col justify-end p-4 sm:p-5 lg:p-6 transition-opacity duration-300 group-hover:opacity-0">
+            <img src="/arrow.svg" alt="pil ikon" class="w-10 h-10 invert" />
+          </div>
+
+          <!-- BESKRIVELSE OG KALENDERKNAP SOM VISES VED HOVER PÅ DESKTOP -->
+          <div class="absolute inset-0 flex flex-col justify-end gap-4 sm:gap-5 lg:gap-6 p-4 sm:p-5 lg:p-6 lg:opacity-0 lg:transition-opacity lg:duration-300 lg:group-hover:opacity-100">
+            <Text color="secondary">
+              Kom forbi DISTORTION x BOOM pop-up event, hvor vi samler musik, streetwear og festivalstemning direkte på gaden. En hemmelig artist fyrer et par tracks af, mens du kan opleve BOOM tæt på, shoppe udvalgte styles og hænge ud med os midt i
+              Distortion-energien. Det bliver uformelt, spontant og fyldt med god stemning.
+            </Text>
+
+            <button onclick="addToCalendar('DISTORTION X BOOM BUTIK', '2026-06-04')" class="flex items-center gap-2 sm:gap-3 w-fit group/cal cursor-pointer">
+              <img src="ic_outline-plus.svg" class="w-4 sm:w-5 transition-transform duration-200 group-hover/cal:scale-125" alt="plus icon" />
+              <span class="transition-transform duration-200 group-hover/cal:translate-x-1">Tilføj til kalender</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- EVENTBILLEDE 1 -->
+        <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 70vh;">
+          <img src="picture.webp" class="w-full h-full object-cover" alt="Billede från Distortion event" />
+        </div>
+
+        <!-- EVENTBILLEDE 2 -->
+        <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 70vh;">
+          <img src="/picture-1.webp" class="w-full h-full object-cover" alt="Billede 2 från Distortion event" />
+        </div>
+
+        <!-- EVENTBILLEDE 3 -->
+        <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 70vh;">
+          <img src="/picture-2.webp" class="w-full h-full object-cover" alt="Billede 3 från Distortion event" />
+        </div>
+      </section>
+
+      <!-- SEKTION 2: BOOMEUR EVENT -->
+      <section class="snap-start h-full bg-body-primary flex items-center gap-2 overflow-x-auto lg:overflow-x-hidden snap-x snap-mandatory lg:snap-none scrollbar-hide">
+        <!-- TEKSTKORT MED DATO, TITEL, BESKRIVELSE OG KALENDERKNAP -->
+        <div class="group relative shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start bg-red-600 text-text-secondary overflow-hidden cursor-pointer" style="height: 70vh;">
+          <!-- DATO OG EVENTNAVN -->
+          <div class="absolute top-0 left-0 p-4 sm:p-5 lg:p-6 z-10">
+            <Heading htmlheading="h2" size="large" weight="semibold" color="secondary">20. juni 2026</Heading>
+            <Heading htmlheading="h3" size="xsmall" weight="semibold" color="secondary">BOOMEUR</Heading>
+          </div>
+
+          <!-- PIL SOM VISES PÅ DESKTOP FØR HOVER -->
+          <div class="hidden lg:flex absolute inset-0 flex-col justify-end p-4 sm:p-5 lg:p-6 transition-opacity duration-300 group-hover:opacity-0">
+            <img src="/arrow.svg" alt="pil ikon" class="w-10 h-10 invert" />
+          </div>
+
+          <!-- BESKRIVELSE OG KALENDERKNAP SOM VISES VED HOVER PÅ DESKTOP -->
+          <div class="absolute inset-0 flex flex-col justify-end gap-4 sm:gap-5 lg:gap-6 p-4 sm:p-5 lg:p-6 lg:opacity-0 lg:transition-opacity lg:duration-300 lg:group-hover:opacity-100">
+            <Text color="secondary">
+              BOOMER event med DJ-set, kolde øl og merch drop. Kom forbi, hæng ud med os og oplev BOOM i et mere uformelt format, hvor musik, venner og gode outfits samles. Vi dropper udvalgt merch, skruer op for stemningen og gør plads til en aften
+              med energi og fællesskab.
+            </Text>
+
+            <button onclick="addToCalendar('BOOMEUR X BOOM BUTIK', '2026-06-20')" class="flex items-center gap-2 sm:gap-3 w-fit group/cal cursor-pointer">
+              <img src="ic_outline-plus.svg" class="w-4 sm:w-5 transition-transform duration-200 group-hover/cal:scale-125" alt="plus icon" />
+              <span class="transition-transform duration-200 group-hover/cal:translate-x-1">Tilføj til kalender</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- EVENTBILLEDE 1 -->
+        <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 70vh;">
+          <img src="picture-3.webp" class="w-full h-full object-cover" alt="Billede 1 från BOOMEUR event" />
+        </div>
+
+        <!-- EVENTBILLEDE 2 -->
+        <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 70vh;">
+          <img src="/picture-5.webp" class="w-full h-full object-cover" alt="Billede 2 från BOOMEUR event" />
+        </div>
+
+        <!-- EVENTBILLEDE 3 -->
+        <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 70vh;">
+          <img src="/picture-4.webp" class="w-full h-full object-cover" alt="Billede 3 från BOOMEUR event" />
+        </div>
+      </section>
+
+      <!-- SEKTION 3: ROSKILDE FESTIVAL EVENT -->
+      <section class="snap-start h-full bg-body-primary flex items-center gap-2 overflow-x-auto lg:overflow-x-hidden snap-x snap-mandatory lg:snap-none scrollbar-hide">
+        <!-- TEKSTKORT MED DATO, TITEL, BESKRIVELSE OG KALENDERKNAP -->
+        <div class="group relative shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start bg-orange-500 text-text-secondary overflow-hidden cursor-pointer" style="height: 70vh;">
+          <!-- DATO OG EVENTNAVN -->
+          <div class="absolute top-0 left-0 p-4 sm:p-5 lg:p-6 z-10">
+            <Heading htmlheading="h2" size="large" weight="semibold" color="secondary">1. juli 2026</Heading>
+            <Heading htmlheading="h3" size="xsmall" weight="semibold" color="secondary">ROSKILDE FESTIVAL</Heading>
+          </div>
+
+          <!-- PIL SOM VISES PÅ DESKTOP FØR HOVER -->
+          <div class="hidden lg:flex absolute inset-0 flex-col justify-end p-4 sm:p-5 lg:p-6 transition-opacity duration-300 group-hover:opacity-0">
+            <img src="/arrow.svg" alt="pil ikon" class="w-10 h-10 invert" />
+          </div>
+
+          <!-- BESKRIVELSE OG KALENDERKNAP SOM VISES VED HOVER PÅ DESKTOP -->
+          <div class="absolute inset-0 flex flex-col justify-end gap-4 sm:gap-5 lg:gap-6 p-4 sm:p-5 lg:p-6 lg:opacity-0 lg:transition-opacity lg:duration-300 lg:group-hover:opacity-100">
+            <Text color="secondary">
+              Roskilde Festival pop-up med BOOM, hvor festivalstemning, musik og merch samles i et uformelt drop. Kom forbi, oplev udvalgte styles, få fingrene i særligt merch og hæng ud med os midt i Roskildes energi, fællesskab og sommerstemning.
+              Det bliver afslappet, spontant og skabt til festivaldage med venner, musik og gode outfits.
+            </Text>
+
+            <button onclick="addToCalendar('ROSKILDE FESTIVAL X BOOM BUTIK', '2026-07-01')" class="flex items-center gap-2 sm:gap-3 w-fit group/cal cursor-pointer">
+              <img src="ic_outline-plus.svg" class="w-4 sm:w-5 transition-transform duration-200 group-hover/cal:scale-125" alt="plus icon" />
+              <span class="transition-transform duration-200 group-hover/cal:translate-x-1">Tilføj til kalender</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- EVENTBILLEDE 1 -->
+        <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 70vh;">
+          <img src="/picture-6.webp" class="w-full h-full object-cover" alt="Billede 1 från ROSKILDE FESTIVAL event" />
+        </div>
+
+        <!-- EVENTBILLEDE 2 -->
+        <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 70vh;">
+          <img src="/picture-7.webp" class="w-full h-full object-cover" alt="Billede 2 från ROSKILDE FESTIVAL event" />
+        </div>
+
+        <!-- EVENTBILLEDE 3 -->
+        <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 70vh;">
+          <img src="/picture-8.webp" class="w-full h-full object-cover" alt="Billede 3 från ROSKILDE FESTIVAL event" />
+        </div>
+      </section>
+    </div>
+  </main>
+</MainLayout>
+
+<script>
+  window.addToCalendar = function (title: string, date: string) {
+    const d = date.replaceAll("-", "");
+    window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${d}/${d}`, "_blank");
+  };
+
+  const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
+
+  const scrollContainer = document.querySelector<HTMLElement>("#events-scroll");
+  const sections = document.querySelectorAll<HTMLElement>("#events-scroll section");
+
+  scrollContainer?.addEventListener("scroll", () => {
+    const viewHeight = scrollContainer.clientHeight;
+    sections.forEach((section) => {
+      const scrolledAway = clamp(-section.getBoundingClientRect().top / viewHeight, 0, 1);
+      section.style.transform = `scale(${1 - scrolledAway * 0.35})`;
+      section.style.transformOrigin = "top center";
+      section.style.opacity = String(clamp(1 - scrolledAway * 1.5, 0, 1));
+    });
+  });
+</script>

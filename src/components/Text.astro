@@ -1,0 +1,31 @@
+---
+// HENT PROPS OG SÆT STANDARDVÆRDIER
+const { teksttype = "brødtekst", weight = "regular", font = "body", color = "primary" } = Astro.props;
+
+// DEFINER TEKSTSTØRRELSER
+const sizeClasses = {
+  brødtekst: "lg:text-desktop-p text-mobile-p",
+  tag: "lg:text-desktop-tag text-mobile-tag",
+};
+
+// DEFINER FONTWEIGHT
+const stylingClasses = {
+  regular: "font-normal",
+};
+
+// DEFINER FONTFAMILIE
+const fontClasses = {
+  body: "font-body",
+};
+
+// DEFINER TEKSTFARVER
+const colorClasses = {
+  primary: "text-text-primary",
+  secondary: "text-text-secondary",
+};
+---
+
+<!-- TEKSTKOMPONENT -->
+<p class:list={[sizeClasses[teksttype], stylingClasses[weight], fontClasses[font], colorClasses[color]]}>
+  <slot />
+</p>

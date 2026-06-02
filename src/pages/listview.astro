@@ -1,0 +1,47 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import ProductCard from "../components/ProductCard.astro";
+import PromoCard from "../components/PromoCard.astro";
+import Heading from "../components/Heading.astro";
+import { fetchProducts } from "../lib/supabase";
+
+// HENTER ALLE PRODUKTER FRA SUPABASE
+const products = await fetchProducts();
+---
+
+<MainLayout title="Boom Butik - Shop alt">
+  <!-- MAIN WRAPPER FOR SHOP-SIDEN -->
+  <main class="px-margin-mobile lg:px-margin-desktop">
+    <!-- PRODUKTGRID MED RESPONSIVE KOLONNER OG AFSTAND -->
+    <section class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 lg:mt-main-top-desktop mt-main-top-mobile gap-grid-gap-mobile lg:gap-grid-gap-desktop">
+      {
+        // LOOPER GENNEM ALLE PRODUKTER OG INDSÆTTER PROMOCARDS PÅ BESTEMTE POSITIONER
+        products.flatMap((product, position) => {
+          // OPRETTER ET ARRAY, SÅ DER BÅDE KAN TILFØJES PROMOCARD OG PRODUKTKORT
+          const cards = [];
+
+          // INDSÆTTER PROMOCARD FOR SETS EFTER DEN FØRSTE POSITION
+          if (position === 1) cards.push(<PromoCard image="/promocard1.webp" title="sets" href="/kategori/sets" />);
+
+          // INDSÆTTER PROMOCARD FOR OVERDELE EFTER POSITION 6
+          if (position === 6) cards.push(<PromoCard image="/promocard2.webp" title="overdele" href="/kategori/overdele" />);
+
+          // INDSÆTTER PROMOCARD FOR UNDERDELE EFTER POSITION 10
+          if (position === 10) cards.push(<PromoCard image="/promocard3.webp" title="underdele" href="/kategori/underdele" />);
+
+          // INDSÆTTER PROMOCARD FOR ACCESSORIES EFTER POSITION 15
+          if (position === 15) cards.push(<PromoCard image="/promocard4.webp" title="accessories" href="/kategori/accessories" />);
+
+          // INDSÆTTER PROMOCARD FOR SPORTSTØJ EFTER POSITION 20
+          if (position === 20) cards.push(<PromoCard image="/promocard5.webp" title="sportstøj" href="/kategori/sportstoj" />);
+
+          // TILFØJER DET AKTUELLE PRODUKT SOM PRODUKTKORT
+          cards.push(<ProductCard product={product} />);
+
+          // RETURNERER BÅDE EVENTUELT PROMOCARD OG PRODUKTKORT TIL GRIDDET
+          return cards;
+        })
+      }
+    </section>
+  </main>
+</MainLayout>

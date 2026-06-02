@@ -1,0 +1,226 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import Button from "../components/Button.astro";
+
+// DATA FOR HVER COLLAB MED STANDARD-BILLEDE, HOVER-BILLEDE OG LINK
+const collabs = [
+  { image: "/collabs1.webp", hover: "/collabs1hover.webp", href: "/collabs/solitude-studios" },
+  { image: "/collabs2.webp", hover: "/collabs2hover.webp", href: "/collabs/speedo" },
+  { image: "/collabs3.webp", hover: "/collabs3hover.webp", href: "/collabs/rode-kors" },
+  { image: "/collabs4.webp", hover: "/collabs4hover.webp", href: "/collabs/always-hungry" },
+  { image: "/collabs5.webp", hover: "/collabs5hover.webp", href: "/collabs/roskilde-festival" },
+];
+---
+
+<MainLayout title="Collabs">
+  <!-- YDRE WRAPPER MED MARGIN OG RESPONSIV PADDING -->
+  <div class="px-margin-mobile lg:px-margin-desktop lg:mt-main-top-desktop mt-main-top-mobile">
+
+<!-- OMRÅDE HVOR COLLAB-BILLEDERNE VISES OG ANIMERES -->
+     <div style="height: calc(100vh - 64px); overflow: hidden; position: relative;">
+
+      <!-- BILLEDSTACK HVOR ALLE COLLABS LIGGER UNDER HINANDEN (PREVIEW DEL)-->
+      <div id="collabs-stack" style="display: flex; flex-direction: column; width: 100%;">
+        {collabs.map((c, i) => (
+          <!-- ENKELT COLLAB-ELEMENT -->
+          <div class="collab-item" style="width: 100%; overflow: hidden; flex-shrink: 0; position: relative;">
+
+            <!-- COLLAB-BILLEDE MED DATA TIL HOVER-EFFEKT -->
+            <img
+              src={c.image}
+              data-default={c.image}
+              data-hover={c.hover}
+              alt=""
+              style="width: 100%; display: block; object-fit: cover; object-position: center; transition: opacity 0.5s ease;"
+            />
+
+            <!-- KNAP DER VISES, NÅR COLLAB-ELEMENTET ER AKTIVT -->
+            <div class="collab-overlay absolute bottom-6 right-6 opacity-0 transition-opacity duration-300 pointer-events-none">
+              <a href={c.href}>
+                <Button variant="secondary" size="small">Læs mere →</Button>
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- USYNLIG SCROLL-TRACKER DER STYRER ANIMATIONEN -->
+      <div id="collabs-scroll" class="scrollbar-hide" style="position: absolute; inset: 0; overflow-y: scroll; pointer-events: all;">
+        <div id="collabs-track" style="width: 1px;"></div>
+      </div>
+
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  /* VISER KNAPPEN, NÅR DET AKTIVE COLLAB-ELEMENT HAR KLASSEN IS-ACTIVE */
+  .collab-item.is-active .collab-overlay {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+</style>
+
+<script>
+  // HØJDEN PÅ DE SMÅ PREVIEW-RÆKKER
+  const ROW = 54;
+
+  // ANTAL COLLAB-ELEMENTER
+  const N = 5;
+
+  // STYRER HVOR BLØDT HØJDERNE ANIMERES
+  const EASE = 0.4;
+
+  // BESTEMMER HVOR LÆNGE DET AKTIVE BILLEDE BLIVER VIST I FULD HØJDE
+  const DWELL = 1.5;
+
+  // MAKSIMAL HØJDE FOR DET STORE BILLEDE I FORHOLD TIL VIEWPORTEN
+  const MAX_IMG = 0.8;
+
+  // HENTER SCROLL-ELEMENT, TRACK OG ALLE COLLAB-ELEMENTER
+  const scroller = document.getElementById("collabs-scroll") as HTMLElement;
+  const track = document.getElementById("collabs-track") as HTMLElement;
+  const items = document.querySelectorAll<HTMLElement>(".collab-item");
+
+  // BEREGNER VIEWPORT-HØJDEN MINUS HEADERENS HØJDE
+  function vh() {
+    return window.innerHeight - 64;
+  }
+
+  // BEREGNER FULD HØJDE FOR HVERT BILLEDE
+  function fullH(i: number) {
+    const v = vh();
+    const rowsBelow = N - 1 - i;
+    return Math.min(v * MAX_IMG, v - rowsBelow * ROW);
+  }
+
+  // GEMMER DE AKTUELLE ANIMEREDE HØJDER
+  const currentHeights: number[] = Array(N).fill(0);
+
+  // GEMMER DE HØJDER, SOM ELEMENTERNE SKAL ANIMERES HEN IMOD
+  const targetHeights: number[] = Array(N).fill(0);
+
+  // BEREGNER MÅLHØJDER UD FRA SCROLL-POSITIONEN
+  function calcTargets(scrollTop: number) {
+    const v = vh();
+    const sectionScroll = v * (1 + DWELL);
+    const transition = scrollTop / sectionScroll;
+    const active = Math.floor(transition);
+    const rawProgress = transition - active;
+
+    // BEREGNER HVORNÅR DWELL-FASEN SLUTTER
+    const dwellEnd = DWELL / (1 + DWELL);
+    const inDwell = rawProgress < dwellEnd;
+    const progress = inDwell ? 0 : (rawProgress - dwellEnd) / (1 - dwellEnd);
+
+    items.forEach((item, i) => {
+      const fH = fullH(i);
+      let h: number;
+
+      if (i < active) {
+        // SKJULER DE COLLABS, SOM ALLEREDE ER PASSERET
+        h = 0;
+      } else if (i === active) {
+        if (inDwell) {
+          // HOLDER DET AKTIVE BILLEDE I FULD HØJDE
+          currentHeights[i] = fH;
+          h = fH;
+        } else {
+          // KRYMPER DET AKTIVE BILLEDE NED TIL PREVIEW-HØJDE
+          h = fH - progress * (fH - ROW);
+        }
+      } else if (i === active + 1) {
+        // LADER NÆSTE BILLEDE VOKSE OP
+        h = ROW + progress * (fH - ROW);
+      } else {
+        // VISER KOMMENDE BILLEDER SOM PREVIEW-RÆKKER
+        h = ROW;
+      }
+
+      targetHeights[i] = h;
+
+      // GØR KUN DET AKTIVE ELEMENT AKTIVT UNDER DWELL-FASEN
+      item.classList.toggle("is-active", i === active && inDwell);
+    });
+  }
+
+  // ANIMERER HØJDERNE MOD DERES MÅLHØJDER
+  function applyHeights() {
+    items.forEach((item, i) => {
+      const img = item.querySelector("img") as HTMLElement;
+      currentHeights[i] += (targetHeights[i] - currentHeights[i]) * EASE;
+      const h = currentHeights[i];
+
+      item.style.height = `${h}px`;
+      img.style.height = `${h}px`;
+    });
+  }
+
+  // KØRER ANIMATIONEN KONTINUERLIGT
+  function loop() {
+    applyHeights();
+    requestAnimationFrame(loop);
+  }
+
+  // SKIFTER TIL HOVER-BILLEDE PÅ DET AKTIVE ELEMENT
+  scroller.addEventListener("mousemove", () => {
+    items.forEach((item) => {
+      const img = item.querySelector("img") as HTMLImageElement;
+
+      if (item.classList.contains("is-active") && img.dataset.hover) {
+        img.src = img.dataset.hover;
+      }
+    });
+  });
+
+  // SKIFTER TILBAGE TIL STANDARD-BILLEDE, NÅR MUSEN FORLADER OMRÅDET
+  scroller.addEventListener("mouseleave", () => {
+    items.forEach((item) => {
+      const img = item.querySelector("img") as HTMLImageElement;
+
+      if (img.dataset.default) {
+        img.src = img.dataset.default;
+      }
+    });
+  });
+
+  // SÆTTER STARTTILSTAND FOR SCROLL, HØJDER OG AKTIVT ELEMENT
+  function init() {
+    const v = vh();
+    const sectionScroll = v * (1 + DWELL);
+
+    // GØR SCROLL-TRACKEREN HØJ NOK TIL HELE ANIMATIONEN
+    track.style.height = `${sectionScroll * (N - 1) + v}px`;
+
+    // SÆTTER FØRSTE BILLEDE TIL FULD HØJDE OG RESTEN SOM PREVIEW-RÆKKER
+    items.forEach((item, i) => {
+      const fH = fullH(i);
+      const h = i === 0 ? fH : ROW;
+
+      currentHeights[i] = h;
+      targetHeights[i] = h;
+
+      const img = item.querySelector("img") as HTMLElement;
+      item.style.height = `${h}px`;
+      img.style.height = `${h}px`;
+    });
+
+    // GØR FØRSTE COLLAB AKTIV FRA START
+    items[0].classList.add("is-active");
+  }
+
+  // INITIALISERER SIDEN
+  init();
+
+  // OPDATERER ANIMATIONEN VED SCROLL
+  scroller.addEventListener("scroll", () => calcTargets(scroller.scrollTop));
+
+  // GENBEREGNER HØJDER VED RESIZE
+  window.addEventListener("resize", () => {
+    init();
+    calcTargets(scroller.scrollTop);
+  });
+
+  // STARTER ANIMATIONSLOOPET
+  requestAnimationFrame(loop);
+</script>

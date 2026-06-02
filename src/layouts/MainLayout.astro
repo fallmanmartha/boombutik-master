@@ -1,0 +1,40 @@
+---
+// IMPORT AF HEADER, FOOTER OG GLOBAL CSS
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/tailwind.css";
+
+// HENT SIDETITEL FRA PROPS
+const { title } = Astro.props;
+---
+
+<html lang="da">
+  <head>
+    <!-- METAOPSÆTNING -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <!-- FAVICON -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- SIDETITEL -->
+    <title>{title}</title>
+
+    <!-- GOOGLE FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+
+    <!-- HENTER TIL SCROLL-ANIMATIONER -->
+    <script defer src="https://unpkg.com/tailwindcss-intersect@2.x.x/dist/observer.min.js"></script>
+  </head>
+
+  <body>
+    <!-- HEADER DER VISES PÅ ALLE SIDER -->
+    <Header />
+
+    <!-- HER INDSÆTTES SIDENS INDHOLD -->
+    <slot />
+
+    <!-- FOOTER DER VISES PÅ ALLE SIDER -->
+    <Footer />
+  </body>
+</html>

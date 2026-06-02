@@ -1,0 +1,139 @@
+---
+// IMPORT AF KOMPONENT
+import Heading from "./Heading.astro";
+
+// HENT PRODUKT OG VARIANT FRA PROPS
+const { product, variant = "default" } = Astro.props;
+
+// FIND FØRSTE FARVE SOM STARTFARVE
+const firstColor = product.colors[0]?.id;
+
+// GØR BILLEDER OG FARVER KLAR TIL ALPINE.JS
+const imagesJson = JSON.stringify(product.images);
+const colorsJson = JSON.stringify(product.colors);
+---
+
+<!-- PRODUKTKORT -->
+<div
+  class="flex flex-col mb-5"
+  x-data={`{
+    activeColor: '${firstColor ?? ""}',
+    images: ${imagesJson},
+    colors: ${colorsJson},
+    sizes: ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL'],
+    hovered: false,
+    quickAdd: false,
+    selectedSize: null,
+
+    // FINDER DET BILLEDE, DER PASSER TIL DEN VALGTE FARVE
+    get activeImage() {
+      return this.images.find(i => i.color_id === this.activeColor)
+        ?? this.images[0];
+    },
+
+    // FINDER ET EKSTRA BILLEDE, SOM KAN VISES VED HOVER
+    get secondImage() {
+      const filtered = this.images.filter(i => i.color_id === this.activeColor);
+      return filtered[1] ?? null;
+    },
+
+    // SKIFTER PRODUKTETS AKTIVE FARVE
+    setColor(colorId) {
+      this.activeColor = colorId;
+    }
+  }`}
+>
+  <!-- PRODUKTBILLEDE OG HOVER-EFFEKT -->
+  <div
+    class="relative w-full aspect-3/4 overflow-hidden group"
+    x-on:mouseenter="hovered = true"
+    x-on:mouseleave="hovered = false; quickAdd = false; selectedSize = null"
+  >
+    <!-- FØRSTE PRODUKTBILLEDE -->
+    <img
+      :src="activeImage?.storage_path"
+      :alt="activeImage?.alt_text ?? ''"
+      loading="lazy"
+      class="absolute inset-0 w-full h-full object-cover transition-opacity duration-200"
+      :class="hovered && secondImage ? 'opacity-0' : 'opacity-100'"
+    />
+
+    <!-- ANDET PRODUKTBILLEDE VISES VED HOVER -->
+    <img
+      :src="secondImage?.storage_path ?? activeImage?.storage_path"
+      :alt="secondImage?.alt_text ?? ''"
+            loading="lazy"
+
+      class="absolute inset-0 w-full h-full object-cover transition-opacity duration-200"
+      :class="hovered && secondImage ? 'opacity-100' : 'opacity-0'"
+    />
+
+    <!-- KLIKBAR LINK OVER HELE BILLEDET -->
+    <a href={`/produkt/${product.slug}`} class="absolute inset-0"   aria-label={`Gå til produktet ${product.name}`}
+></a>
+
+    <!-- PLUS-KNAP TIL QUICK ADD -->
+    <button
+      x-show="!quickAdd"
+      x-on:click.prevent="quickAdd = true"
+      class="absolute bottom-4 right-4 w-7 h-7 bg-button-primary-default text-text-button-primary group-hover:bg-button-primary-hover group-hover:text-text-button-secondary flex items-center justify-center z-10"
+    >
+      +
+    </button>
+
+    <!-- QUICK ADD PANEL MED STATISKE STØRRELSER -->
+    <div
+      x-show="quickAdd"
+      x-on:click.prevent
+      class="absolute right-0 bottom-0 bg-body-primary flex flex-col items-center justify-center gap-2 px-1 py-2 w-14 z-10"
+    >
+      <!-- VISER STATISKE STØRRELSESKNAPPER FRA XXS TIL XXL -->
+      <template x-for="size in sizes" :key="size">
+        <button
+          x-on:click.prevent="selectedSize = size"
+          class="font-primary text-sm w-11 h-11 transition-all"
+          :class="selectedSize === size ? 'bg-button-secondary-default text-text-button-primary' : 'hover:underline'"
+          x-text="size"
+        ></button>
+      </template>
+
+      <!-- LUK QUICK ADD PANEL -->
+      <button x-on:click.prevent="quickAdd = false; selectedSize = null" class="mt-2">
+        <img src="/cart.svg" alt="cart ikon" class="w-5 h-5">
+      </button>
+    </div>
+  </div>
+
+  <!-- PRODUKTINFO UNDER BILLEDET -->
+  {variant === "default" && (
+    <a href={`/produkt/${product.slug}`} aria-label={`Gå til produktet ${product.name}`}>
+      <div class="pt-3 flex flex-col gap-3">
+
+        <!-- PRODUKTNAVN -->
+        <Heading htmlheading="h3" size="xsmall" font="heading" color="primary" weight="semibold">
+          {product.name}
+        </Heading>
+
+        <!-- PRODUKTPRIS -->
+        <Heading htmlheading="h5" size="xsmall" font="heading" color="primary" weight="regular">
+          {product.price} {product.currency}
+        </Heading>
+
+        <!-- FARVEPRIKKER -->
+        {product.colors.length > 0 && (
+          <div class="flex gap-1.5 flex-wrap mt-1">
+            {product.colors.map((color) => (
+              <span
+                class="w-5 h-5 rounded-full inline-block border border-border-primary"
+                style={`background-color: ${color.hex ?? "#ccc"}`}
+                title={color.name}
+                x-on:mouseenter={`setColor('${color.id}')`}
+                :class={`activeColor === '${color.id}' ? 'scale-110' : ''`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </a>
+  )}
+</div>

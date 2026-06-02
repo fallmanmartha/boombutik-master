@@ -1,0 +1,338 @@
+---
+// HENT AKTUEL URL OG STI
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.slice(1);
+
+// IMPORT AF KOMPONENTER OG DATA
+import Link from "./Link.astro";
+import { fetchProducts } from "../lib/supabase";
+import Heading from "./Heading.astro";
+
+// HENT PRODUKTER TIL MOBILMENUENS PRODUKTKARUSEL
+const products = await fetchProducts();
+const carouselProducts = products.slice(0, 6);
+
+// KATEGORIER TIL SHOP-DROPDOWN
+const shopCategories = [
+  { name: "Shop alt", href: "/listview" },
+  { name: "Bestsellers", href: "/kategori/bestsellers" },
+  { name: "Sets", href: "/kategori/sets" },
+  { type: "divider" },
+  { name: "Overdele", href: "/kategori/overdele" },
+  { name: "Underdele", href: "/kategori/underdele" },
+  { name: "Accessories", href: "/kategori/accessories" },
+];
+
+// KATEGORIER TIL UDFORSK-DROPDOWN
+const udforskCategories = [
+  { name: "Om os", href: "/om-os" },
+  { name: "Events", href: "/events" },
+  { name: "Collabs", href: "/collabs" },
+];
+---
+
+<!-- TOPBAR MED USP'ER -->
+<section
+  x-data="{
+    active: 0,
+    items: [
+      {
+        icon: '/Artboard1.png',
+        text: 'LEVERING 1-2 DAGE',
+        alt: 'Levering',
+        size: 'w-3.5 h-3.5'
+      },
+      {
+        icon: '/Artboard2.png',
+        text: 'FRI FRAGT FRA 499 DK',
+        alt: 'Fragt',
+        size: 'w-4.5 h-4.5'
+      },
+      {
+        icon: '/Artboard3.png',
+        text: '4,6/5 PÅ TRUSTPILOT',
+        alt: 'Trustpilot',
+        size: 'w-3.5 h-3.5'
+      }
+    ],
+    init() {
+      setInterval(() => {
+        this.active = (this.active + 1) % this.items.length;
+      }, 3000);
+    }
+  }"
+  class="bg-banner-primary px-3 md:px-8 py-1.5"
+>
+  <div class="max-w-350 mx-auto">
+
+    <!-- MOBIL USP-SLIDER -->
+    <div class="md:hidden relative h-5 overflow-hidden">
+      <template x-for="(item, index) in items" :key="index">
+        <div
+          x-show="active === index"
+          x-transition:enter="transition ease-in-out duration-500"
+          x-transition:enter-start="opacity-0 translate-y-2"
+          x-transition:enter-end="opacity-100 translate-y-0"
+          x-transition:leave="transition ease-in-out duration-500"
+          x-transition:leave-start="opacity-100 translate-y-0"
+          x-transition:leave-end="opacity-0 -translate-y-2"
+          class="absolute inset-0 flex items-center justify-center gap-1.5"
+        >
+          <img :src="item.icon" :alt="item.alt" :class="item.size" class="object-contain shrink-0" />
+          <span class="text-xs font-medium uppercase leading-none tracking-tight whitespace-nowrap text-primary" x-text="item.text"></span>
+        </div>
+      </template>
+    </div>
+
+    <!-- DESKTOP USP-RÆKKE -->
+    <div class="hidden md:grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      <div class="flex items-center justify-center gap-2">
+        <img src="/Artboard1.png" alt="Levering" class="w-6 h-6 object-contain shrink-0" />
+        <Heading htmlheading="h5" size="tag" weight="medium" color="primary" class="uppercase leading-none tracking-tight whitespace-nowrap"> LEVERING 1-2 DAGE </Heading>
+      </div>
+
+      <div class="flex items-center justify-center gap-2">
+        <img src="/Artboard2.png" alt="Fragt" class="w-8 h-8 object-contain shrink-0" />
+        <Heading htmlheading="h5" size="tag" weight="medium" color="primary" class="uppercase leading-none tracking-tight whitespace-nowrap"> FRI FRAGT FRA 499 DK </Heading>
+      </div>
+
+      <div class="flex items-center justify-center gap-2">
+        <img src="/Artboard3.png" alt="Trustpilot" class="w-6 h-6 object-contain shrink-0" />
+        <Heading htmlheading="h5" size="tag" weight="medium" color="primary" class="uppercase leading-none tracking-tight whitespace-nowrap"> 4,6/5 PÅ TRUSTPILOT </Heading>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HEADER MED DESKTOP- OG MOBILNAVIGATION -->
+<header
+  x-data="{ showmenu: false, activeDropdown: null }"
+  x-on:mouseleave="activeDropdown = null"
+  class="sticky top-0 z-50 bg-body-primary lg:px-margin-desktop px-margin-mobile"
+>
+  <!-- DESKTOP HEADER -->
+  <div class="hidden lg:flex justify-between py-4">
+
+    <!-- LOGO -->
+    <div class="w-50">
+      <a href="/">
+        <img src="/logo2.svg" alt="Logo" class="hover:animate-jump h-8 w-auto" />
+      </a>
+    </div>
+
+    <!-- DESKTOP NAVIGATION -->
+    <nav>
+      <ul class="flex flex-row gap-8">
+
+        <!-- SHOP DROPDOWN TRIGGER -->
+        <li x-on:mouseenter="activeDropdown = 'shop'">
+          <Link href="/listview/" variant="textlink" size="default">
+            Shop
+            <img src="/smallarrow.svg" alt="" class="inline w-3 ml-1" />
+          </Link>
+        </li>
+
+        <!-- UDFORSK BOOM DROPDOWN TRIGGER -->
+        <li x-on:mouseenter="activeDropdown = 'udforsk'">
+          <Link href="/" variant="textlink" size="default">
+            Udforsk Boom
+            <img src="/smallarrow.svg" alt="" class="inline w-3 ml-1" />
+          </Link>
+        </li>
+
+        <!-- LINK TIL STYLET MED BOOM -->
+        <li>
+          <Link href="/styletmedboom" variant="textlink" size="default">Stylet med BOOM</Link>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- DESKTOP SØGNING OG KURV -->
+    <div x-data="{ openSearch: false }" class="flex items-center gap-4 w-50 justify-end">
+
+      <!-- SØGEFELT DER VISES VED KLIK -->
+      <div x-show="openSearch" x-transition class="flex items-center border-b border-border-secondary w-64">
+        <input type="text" placeholder="SØG PRODUKT" class="w-full border-0 pl-0 indent-0 bg-transparent outline-none text-desktop-p placeholder:text-grey-400" />
+
+        <!-- LUK SØGEFELT -->
+        <button x-on:click="openSearch = false" class="text-3xl leading-none cursor-pointer">×</button>
+      </div>
+
+      <!-- SØGEIKON -->
+      <button x-show="!openSearch" x-on:click="openSearch = true" class="p-0 bg-transparent border-0">
+        <img src="/search.svg" alt="search icon" class="cursor-pointer" />
+      </button>
+
+      <!-- KURVIKON -->
+      <img src="/cart.svg" alt="cart icon" class="cursor-pointer" />
+    </div>
+  </div>
+
+  <!-- DESKTOP DROPDOWN MENU -->
+  <div x-show="activeDropdown !== null" x-transition class="absolute left-0 right-0 top-full z-50 bg-body-primary pt-6 pb-8">
+
+    <!-- SHOP DROPDOWN INDHOLD -->
+    <ul x-show="activeDropdown === 'shop'" class="flex flex-col gap-3 px-margin-desktop">
+      {
+        shopCategories.map((cat) =>
+          cat.type === "divider" ? (
+            <li class="my-2" />
+          ) : (
+            <li>
+              <a href={cat.href} class="font-sans text-sm hover:underline">
+                {cat.name}
+              </a>
+            </li>
+          )
+        )
+      }
+    </ul>
+
+    <!-- UDFORSK DROPDOWN INDHOLD -->
+    <ul x-show="activeDropdown === 'udforsk'" class="flex flex-col gap-3 px-margin-desktop">
+      {
+        udforskCategories.map((cat) => (
+          <li>
+            <a href={cat.href} class="font-sans text-sm hover:underline">
+              {cat.name}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <!-- MOBIL HEADER -->
+  <div class="lg:hidden">
+
+    <!-- MOBIL TOPLINJE -->
+    <div class="flex justify-between items-center py-4">
+
+   <!-- BURGERMENU KNAP -->
+<button x-on:click="showmenu = !showmenu" aria-label="Åbn menu - burger menu ikon">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6" aria-hidden="true">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+  </svg>
+</button>
+
+      <!-- MOBIL LOGO -->
+      <a href="/">
+        <img src="/logo2.svg" alt="Logo" class="h-6 w-auto" />
+      </a>
+
+      <!-- MOBIL SØGNING OG KURV -->
+      <div x-data="{ openSearch: false }" class="flex items-center gap-3">
+
+        <!-- MOBIL SØGEFELT -->
+        <div x-show="openSearch" x-transition class="fixed top-0 left-0 right-0 bg-body-primary z-50 px-6 pt-5 pb-6">
+          <div class="flex items-end justify-between gap-4">
+            <input type="text" placeholder="SØG PRODUKT" class="w-full bg-transparent border-0 border-b border-border-secondary pb-1 pl-0 indent-0 text-mobile-p tracking-tight uppercase placeholder:text-grey-400 outline-none" />
+
+            <!-- LUK MOBIL SØGNING -->
+            <button x-on:click="openSearch = false" class="text-2xl leading-none"> × </button>
+          </div>
+        </div>
+
+        <!-- MOBIL SØGEIKON -->
+        <button x-on:click="openSearch = true">
+          <img src="/search.svg" alt="search icon" class="w-4 h-4 cursor-pointer" />
+        </button>
+
+        <!-- MOBIL KURVIKON -->
+        <img src="/cart.svg" alt="cart icon" class="w-4 h-4 cursor-pointer" />
+      </div>
+    </div>
+
+    <!-- MOBILMENU -->
+    <nav x-show="showmenu" x-transition x-on:click.outside="showmenu = false" class="absolute left-0 right-0 top-full bg-body-primary z-50 flex flex-col justify-between overflow-y-auto">
+
+      <!-- MOBILMENU LINKS -->
+      <ul class="flex flex-col gap-4 px-4 py-4">
+
+        <!-- MOBIL SHOP ACCORDION -->
+        <li x-data="{ open: false }">
+          <button x-on:click="open = !open" class="font-sans text-sm flex items-center gap-2">
+            <Link href="#" variant="textlink" size="default">
+              Shop
+              <img src="/smallarrow.svg" alt="" class="inline w-3 ml-1" />
+            </Link>
+          </button> 
+
+          <!-- MOBIL SHOP UNDERMENU -->
+          <ul x-show="open" class="flex flex-col gap-2 mt-2 pl-4">
+            {
+              shopCategories.map((cat) =>
+                cat.type === "divider" ? (
+                  <li class="my-1" />
+                ) : (
+                  <li>
+                    <a href={cat.href} class="font-sans text-sm hover:underline">
+                      {cat.name}
+                    </a>
+                  </li>
+                )
+              )
+            }
+          </ul>
+        </li>
+
+        <!-- MOBIL UDFORSK ACCORDION -->
+        <li x-data="{ open: false }">
+          <button x-on:click="open = !open" class="font-sans text-sm flex items-center gap-2">
+            <Link href="#" variant="textlink" size="default">
+              Udforsk Boom
+              <img src="/smallarrow.svg" alt="" class="inline w-3 ml-1" />
+            </Link>
+          </button>
+
+          <!-- MOBIL UDFORSK UNDERMENU -->
+          <ul x-show="open" class="flex flex-col gap-2 mt-2 pl-4">
+            {
+              udforskCategories.map((cat) => (
+                <li>
+                  <a href={cat.href} class="font-sans text-sm hover:underline">
+                    {cat.name}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </li>
+
+        <!-- MOBIL LINK TIL STYLET MED BOOM -->
+        <li>
+          <Link href="/styletmedboom">Stylet med BOOM</Link>
+        </li>
+      </ul>
+
+      <!-- MOBIL BESTSELLER KARUSEL -->
+      <div class="px-4 py-6">
+        <Heading htmlheading="h5" size="xsmall" font="heading" color="primary" weight="semibold"> Bestsellers </Heading>
+
+        <div class="flex gap-3 overflow-x-auto snap-x snap-mandatory mt-3">
+          {
+            carouselProducts.map((product) => (
+              <a href={`/produkt/${product.slug}`} class="shrink-0 w-48 snap-start">
+
+                <!-- PRODUKTBILLEDE -->
+                <div class="aspect-3/4 overflow-hidden mb-2">
+                  <img src={product.images[0]?.storage_path} alt={product.name} class="w-full h-full object-cover" />
+                </div>
+
+                <!-- PRODUKTNAVN -->
+                <Heading htmlheading="h4" size="tag" font="heading" color="primary" weight="semibold">
+                  {product.name}
+                </Heading>
+
+                <!-- PRODUKTPRIS -->
+                <Heading htmlheading="h5" size="tag" font="heading" color="primary" weight="regular">
+                  {product.price} {product.currency}
+                </Heading>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
