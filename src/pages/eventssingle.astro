@@ -1,0 +1,298 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+import Heading from "../components/Heading.astro";
+import Text from "../components/Text.astro";
+import Button from "../components/Button.astro";
+import ProductCard from "../components/ProductCard.astro";
+import { fetchProducts } from "../lib/supabase";
+
+const products = await fetchProducts();
+---
+
+<MainLayout title="Events">
+  <style>
+    #events-scroll-wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    #events-scrollbar {
+      width: 4px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+
+    #events-scrollbar-inner {
+      width: 4px;
+      height: 80vh;
+      background: #e5e7eb;
+      position: relative;
+    }
+
+    #events-scrollbar-thumb {
+      width: 4px;
+      height: 25%;
+      background: #f97316;
+      position: absolute;
+      left: 0;
+      top: 0;
+      border-radius: 0;
+      transition: top 0.3s ease;
+    }
+  </style>
+
+  <main class="w-full min-h-screen flex flex-col px-margin-mobile lg:px-margin-desktop">
+    <div id="events-scroll-wrapper">
+      <!-- CUSTOM LEFT SCROLLBAR -->
+      <div id="events-scrollbar">
+        <div id="events-scrollbar-inner">
+          <div id="events-scrollbar-thumb"></div>
+        </div>
+      </div>
+
+      <!-- SCROLL-CONTAINER MED SNAP MELLEM EVENTS -->
+      <div id="events-scroll" class="snap-y snap-mandatory flex-1">
+        <!-- SEKTION 1: DISTORTION EVENT -->
+        <section class="snap-start min-h-screen bg-body-primary flex items-center gap-2 overflow-x-auto snap-x snap-mandatory lg:snap-none scrollbar-hide">
+          <div class="relative shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start text-text-primary flex flex-col justify-center px-5" style="height: 80vh;">
+            <ul class="flex flex-wrap gap-2 mb-8">
+              <li class="bg-banner-primary px-3 py-2">
+                <Text variant="tag">ONSDAG 1. JULI</Text>
+              </li>
+              <li class="bg-banner-primary px-3 py-2">
+                <Text variant="tag">13.00</Text>
+              </li>
+              <li class="bg-orange-500 px-3 py-2">
+                <Text variant="tag" color="secondary">ROSKILDE FESTIVAL</Text>
+              </li>
+            </ul>
+            <div class="max-w-3xl mb-8">
+              <Heading htmlheading="h2" size="large" weight="semibold" color="primary"> KOM TIL POP-UP EVENT HOS BOOM </Heading>
+            </div>
+            <div class="max-w-2xl mb-10">
+              <Text color="primary">
+                Roskilde er mere end musik. Det handler om de mennesker du møder, de øjeblikke du husker og det du har på, når det sker.
+                <br /><br />
+                Den 1. juli kl. 13.00 forvandler vi vores pop-up til en decideret fest. DJ-bordet tager over, ølene er på os, og dørene er åbne for alle. Kom forbi, dans, mød nye mennesker og shop vores styles, mens musikken spiller.
+                <br /><br />
+                Alle er velkomne. Vi ses der.
+              </Text>
+            </div>
+            <div>
+              <Button variant="secondary" size="small">Tilføj til kalender</Button>
+            </div>
+          </div>
+          <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 80vh;">
+            <img src="row1-1.png" class="w-full h-full object-cover" alt="Billede från Distortion event" />
+          </div>
+          <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 80vh;">
+            <img src="/row1-2.png" class="w-full h-full object-cover" alt="Billede 2 från Distortion event" />
+          </div>
+        </section>
+
+        <!-- SEKTION 2: BOOMEUR EVENT -->
+        <section class="snap-start min-h-screen bg-body-primary flex items-center gap-2 overflow-x-auto snap-x snap-mandatory lg:snap-none scrollbar-hide">
+          <div class="relative shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start text-text-primary flex flex-col justify-center px-5" style="height: 80vh;">
+            <ul class="flex flex-wrap gap-2 mb-8">
+              <li class="bg-banner-primary px-3 py-2">
+                <Text variant="tag">ALLE DAGE</Text>
+              </li>
+              <li class="bg-banner-primary px-3 py-2">
+                <Text variant="tag">09.00-02.00</Text>
+              </li>
+              <li class="bg-banner-primary px-3 py-2">
+                <Text variant="tag">ANDENSORTERING</Text>
+              </li>
+              <li class="bg-orange-500 px-3 py-2">
+                <Text variant="tag" color="secondary">FESTIVALPLADSEN</Text>
+              </li>
+            </ul>
+            <div class="max-w-3xl mb-8">
+              <Heading htmlheading="h2" size="large" weight="semibold" color="primary"> Køb vores tøj hele ugen </Heading>
+            </div>
+            <div class="max-w-2xl mb-10">
+              <Text color="primary">
+                Hele ugen finder du vores særlige anden sorterings-bod, hvor du kan shoppe dine favoritstyles til ekstra gode priser.
+                <br /><br />
+                Tøjet er helt nyt og ubrugt – det har blot små detaljer, der gør, at det ikke er havnet i vores normale sortiment. Kvaliteten, komforten og stilen er stadig den samme.
+                <br /><br />
+                Kom forbi, gør et kup, og giv de styles, der fortjener det, en plads i garderoben.
+              </Text>
+            </div>
+            <div>
+              <Button variant="secondary" size="small">SE VORES UDVALG</Button>
+            </div>
+          </div>
+          <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 80vh;">
+            <img src="row2-1.png" class="w-full h-full object-cover" alt="Billede 1 från BOOMEUR event" />
+          </div>
+          <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 80vh;">
+            <img src="/row2-2.png" class="w-full h-full object-cover" alt="Billede 2 från BOOMEUR event" />
+          </div>
+        </section>
+
+        <!-- SEKTION 3: ROSKILDE FESTIVAL EVENT -->
+        <section class="snap-start min-h-screen bg-body-primary flex items-center gap-2 overflow-x-auto snap-x snap-mandatory lg:snap-none scrollbar-hide">
+          <div class="relative shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start text-text-primary flex flex-col justify-center px-5" style="height: 80vh;">
+            <ul class="flex flex-wrap gap-2 mb-8">
+              <li class="bg-banner-primary px-3 py-2">
+                <Text variant="tag">ALLE DAGE</Text>
+              </li>
+              <li class="bg-banner-primary px-3 py-2">
+                <Text variant="tag">09.00-02.00</Text>
+              </li>
+              <li class="bg-orange-500 px-3 py-2">
+                <Text variant="tag" color="secondary">FESTIVALPLADSEN - 7TH STREET</Text>
+              </li>
+            </ul>
+            <div class="max-w-3xl mb-8">
+              <Heading htmlheading="h2" size="large" weight="semibold" color="primary"> Find os på festivalpladsen </Heading>
+            </div>
+            <div class="max-w-2xl mb-10">
+              <Text color="primary"> På kortet kan du se præcis, hvor vores bod er placeret på Festivalpladsen. Kig forbi, oplev vores pop-up, shop dine favoritstyles og sig hej – vi glæder os til at møde jer på Roskilde! </Text>
+            </div>
+            <div>
+              <Button variant="secondary" size="small">Gem position</Button>
+            </div>
+          </div>
+          <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 80vh;">
+            <img src="/row3-1.png" class="w-full h-full object-cover" alt="Billede 1 från ROSKILDE FESTIVAL event" />
+          </div>
+          <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 80vh;">
+            <img src="/row3-2.png" class="w-full h-full object-cover" alt="Billede 2 från ROSKILDE FESTIVAL event" />
+          </div>
+        </section>
+
+        <!-- SEKTION 4: FRIVILLIG EVENT -->
+        <section class="snap-start min-h-screen bg-body-primary flex items-center gap-2 overflow-x-auto snap-x snap-mandatory lg:snap-none scrollbar-hide">
+          <div class="relative shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start text-text-primary flex flex-col justify-center px-5" style="height: 80vh;">
+            <ul class="flex flex-wrap gap-2 mb-8">
+              <li class="bg-banner-primary px-3 py-2">
+                <Text variant="tag">GRATIS ARMBÅND</Text>
+              </li>
+              <li class="bg-banner-primary px-3 py-2">
+                <Text variant="tag">FÆLLESSKAB</Text>
+              </li>
+              <li class="bg-orange-500 px-3 py-2">
+                <Text variant="tag" color="secondary">ROSKILDE FESTIVAL</Text>
+              </li>
+            </ul>
+            <div class="max-w-3xl mb-8">
+              <Heading htmlheading="h2" size="large" weight="semibold" color="primary"> Bliv Frivillig og hyg med os </Heading>
+            </div>
+            <div class="max-w-2xl mb-10">
+              <Text color="primary"> Vi leder efter frivillige til vores bod på festivalpladsen – og vi vil elske at have dig med! Hjælp os i boden, mød nye mennesker og bliv en del af festivalstemningen. </Text>
+              <ul class="mt-6">
+                <li>- 27. juni – 4. juli</li>
+                <li>- Andensortering – styles så gode som nye</li>
+                <li>- Begrænsede pladser</li>
+              </ul>
+              <div class="mt-6">
+                <Text color="primary">
+                  Skriv til os i DM på Instagram <strong>@boombutik</strong> og fortæl, hvorfor du skal være en del af teamet.
+                </Text>
+              </div>
+            </div>
+            <div>
+              <Button variant="secondary" size="small">Tilmeld dig</Button>
+            </div>
+          </div>
+          <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 80vh;">
+            <img src="/row4-1.png" class="w-full h-full object-cover" alt="Billede 1 från ROSKILDE FESTIVAL event" />
+          </div>
+          <div class="shrink-0 w-3/4 sm:w-1/2 md:w-1/3 lg:flex-1 snap-start" style="height: 80vh;">
+            <img src="/row4-2.png" class="w-full h-full object-cover" alt="Billede 2 från ROSKILDE FESTIVAL event" />
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- FRIENDS OF BOOM SEKTION -->
+    <section class="mt-section-desktop">
+      <Heading htmlheading="h2" size="large" weight="bold" color="primary" class="mt-12"> FRIENDS of boom PÅ ROSKILDE </Heading>
+      <div class="grid lg:grid-cols-6 grid-cols-3 gap-grid-gap-desktop">
+        <img src="events1.png" alt="" class="w-full h-full object-cover" />
+        <img src="events2.png" alt="" class="w-full h-full object-cover" />
+        <img src="events3.png" alt="" class="w-full h-full object-cover" />
+        <img src="events4.png" alt="" class="w-full h-full object-cover" />
+        <img src="events5.png" alt="" class="w-full h-full object-cover" />
+        <img src="events6.png" alt="" class="w-full h-full object-cover" />
+        <img src="events7.png" alt="" class="w-full h-full object-cover" />
+        <img src="events8.png" alt="" class="w-full h-full object-cover" />
+        <img src="events9.png" alt="" class="w-full h-full object-cover" />
+        <img src="events10.png" alt="" class="w-full h-full object-cover" />
+        <img src="events11.png" alt="" class="w-full h-full object-cover" />
+        <img src="events12.png" alt="" class="w-full h-full object-cover" />
+      </div>
+    </section>
+
+    <section class="lg:mt-section-desktop mt-section-mobile">
+      <Heading htmlheading="h3" size="medium" weight="semibold" color="primary">TIl dit festival look</Heading>
+      <section class="mt-2 mb-5 lg:mb-8">
+        <div class="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 scrollbar-hide">
+          {
+            products.slice(0, 4).map((product: any) => (
+              <div class="shrink-0 w-3/4 snap-start">
+                <ProductCard product={product} />
+              </div>
+            ))
+          }
+        </div>
+        <div class="hidden md:grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-grid-gap-desktop">
+          {products.slice(0, 4).map((product: any) => <ProductCard product={product} />)}
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    window.addToCalendar = function (title: string, date: string) {
+      const d = date.replaceAll("-", "");
+      window.open(`https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${d}/${d}`, "_blank");
+    };
+
+    const clamp = (val: number, min: number, max: number) => Math.max(min, Math.min(max, val));
+
+    const sections = document.querySelectorAll<HTMLElement>("#events-scroll section");
+    const thumb = document.getElementById("events-scrollbar-thumb") as HTMLElement;
+
+    const SECTION_COUNT = sections.length;
+
+    function getActiveIndex(): number {
+      let closest = 0;
+      let closestDist = Infinity;
+      sections.forEach((section, i) => {
+        const dist = Math.abs(section.getBoundingClientRect().top);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closest = i;
+        }
+      });
+      return closest;
+    }
+
+    function updateScrollbar() {
+      const activeIndex = getActiveIndex();
+      thumb.style.top = `${activeIndex * (100 / SECTION_COUNT)}%`;
+    }
+
+    window.addEventListener("scroll", () => {
+      const viewHeight = window.innerHeight;
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const scrolledAway = clamp(-rect.top / viewHeight, 0, 1);
+        section.style.transform = `scale(${1 - scrolledAway * 0.35})`;
+        section.style.transformOrigin = "top center";
+        section.style.opacity = String(clamp(1 - scrolledAway * 1.5, 0, 1));
+      });
+      updateScrollbar();
+    });
+
+    updateScrollbar();
+  </script>
+</MainLayout>
